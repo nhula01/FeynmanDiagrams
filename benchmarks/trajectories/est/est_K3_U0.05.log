@@ -1,0 +1,2 @@
+c1_check {"c1_counts": 1.1455388125, "se_martingale": 0.00018920382631074084, "occupation_batchmean": 1.1455972506233174, "pairing": "per batch", "occupation": 1.1455972506233174, "diff": -5.8438123317516855e-05, "se_diff_batches": 0.00019281563205617117, "nbatch": 400, "z_martingale": -0.30886332722225396}
+est/est_K3_U0.05.json 6400 3.2e+07 [1.1456, 1.1626, 1.6047] [0.0002, 0.0015, 0.0146]

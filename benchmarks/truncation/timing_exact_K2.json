@@ -1,0 +1,24 @@
+{
+ "what": "exact",
+ "env": {
+  "OMP_NUM_THREADS": "1",
+  "OPENBLAS_NUM_THREADS": "1",
+  "MKL_NUM_THREADS": "1",
+  "SLURM_CPUS_PER_TASK": "1"
+ },
+ "U": 0.15,
+ "kappa": 1.0,
+ "Delta": -1.0,
+ "J": 0.4,
+ "eta": 1.0,
+ "times": {
+  "2": {
+   "evolve": 0.16985897800259409,
+   "nmax": 5,
+   "g2": 1.0970656897282414,
+   "n0": 0.5000735442212537,
+   "spsolve": 0.020646094999392517,
+   "g2_spsolve": 1.0970656897282451
+  }
+ }
+}

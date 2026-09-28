@@ -9,12 +9,13 @@ def kerr_cumulant_ss(kappa, Delta, eta, U, J=0.0, x0=None):
     def rhs(v):
         al = v[0]+1j*v[1]; nc = v[2]; mc = v[3]+1j*v[4]
         alc = np.conj(al)
-        A3 = alc*al**2 + alc*mc + 2*al*nc
-        A4 = alc*al**3 + 3*abs(al)**2*mc + 3*al**2*nc + 3*nc*mc
+        A3 = alc*al**2 + alc*mc + 2*al*nc                  # <a^dag a a>
+        A4 = alc*al**3 + 3*abs(al)**2*mc + 3*al**2*nc + 3*nc*mc   # <a^dag a^3>
         n = nc + abs(al)**2; m = mc + al**2
         dal = -z*al + eta - 1j*U*A3
         dn = -kappa*n + eta*alc + np.conj(eta)*al
         dm = -(kappa + 2j*(Delta-2*J))*m + 2*eta*al - 1j*U*(2*A4 + m)
+        # central moments: d nc = dn - d|al|^2 ; d mc = dm - 2 al dal
         dnc = dn - 2*np.real(alc*dal)
         dmc = dm - 2*al*dal
         return [dal.real, dal.imag, dnc.real, dmc.real, dmc.imag]
@@ -39,6 +40,7 @@ if __name__ == "__main__":
         c = kerr_cumulant_ss(1.0, -1.0, 1.0, U)
         print(U, "cumulant n", round(c['n'],4), "g2", round(c['g2'],4), c['ok'], " meanfield", round(kerr_meanfield(1.0,-1.0,1.0,U),4))
 
+# ---------------------------------------------------------------- ring HFB ---
 def ring_cumulant_ss(K, kappa, Delta, J, eta, U, T=400.0, eps=None):
     """Uniform second-order cumulant (Gaussian / HFB) closure for the Kerr ring,
     in momentum space: alpha (q=0 mean), n_q = <b_q^dag b_q>, m_q = <b_q b_{-q}>."""

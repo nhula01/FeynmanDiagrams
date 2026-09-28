@@ -1,0 +1,7 @@
+{
+ "description": "Disordered eight-site Kerr chain (revision_params.json chain8_fcs), counting on site 0. Diagram partial sums (orders 0..6, maxdeg 5), Gaussian and mean field from revision/trajectories/chain8_contour.json (contour derivatives |chi|=0.1; notebook recursion fcs_multi.TiltedChain.theta_series). Optimal truncation applied here with the common rule. rs_check: the same diagrams recomputed here with the full Rayleigh-Schroedinger recursion (TiltedNZ in fcs_nz.py).",
+ "instruction": "Plot fano and c3c1 versus U with yerr = delta (successive-difference error bar at N*). Use the *_fullRS columns if the lead adopts the corrected recursion; the notebook-recursion columns reproduce the trajectories-track file.",
+ "source": "benchmarks/trajectories/chain8_contour.json",
+ "U": [],
+ "results": {}
+}

@@ -36,12 +36,14 @@ if __name__ == "__main__":
             lhs = mp(ad, m)@mp(a, n)
             rhs = sum(c*O(p, q) for (p, q), c in wick_coeffs(m, n, N, M, +1).items())
             worst = max(worst, np.max(np.abs((lhs-rhs)[:K, :K])))
+            # the O_00 coefficient must equal the unperturbed moment
             c00 = wick_coeffs(m, n, N, M, +1).get((0, 0), 0)
             assert abs(c00 - np.trace(lhs@rho)) < 1e-8, (m, n, c00, np.trace(lhs@rho))
     print("inversion residual:", worst, " and O_00 coefficient = steady moment: ok")
     print("examples: <a^dag a> ->", wick_coeffs(1,1,N,M,+1), "\n  (a^dag)^2a^2 ->",
           {k: np.round(v,4) for k, v in wick_coeffs(2,2,N,M,+1).items()})
 
+# ---- displaced-frame check: <(a^dag)^m a^n> for the Kerr cavity from diagrams in b
 def displaced_moment(mod, m, n, alpha, Nmax):
     """<(a^dag)^m a^n> to order Nmax, from series for O_{jk}=(b^dag)^j b^k (vacuum: N=M=0)."""
     tot = np.zeros(Nmax+1, complex)

@@ -1,0 +1,149 @@
+{
+ "description": "Diagrammatic counting cumulants of the eight-site chain, order by order, with exact chi-derivatives.\nUses the full Rayleigh-Schroedinger recursion (TiltedNZ of revision/truncation/fcs_nz.py, which restores the terms\n-sum_{k=1}^{N-1} theta_k psi_{N-k} that fcs_multi.TiltedChain.theta_series omits).\n\ntheta_N(chi) (partial sums of Eq. (thetaN) through order N, fcs_multi.TiltedChain) is evaluated on the\ncircle chi = r e^{i phi}; its Taylor coefficients (FFT) give c1, c2, c3 without the O(h^2) error of the\nfive-point finite differences used in the paper (h = 0.05).  The finite-difference values are computed\nalongside for comparison.  usage: diag_fcs_contour.py maxdeg Nmax U1,U2,...  -> diag_chain8_maxdeg{m}.json\n",
+ "recursion": "full Rayleigh-Schroedinger",
+ "maxdeg": 6,
+ "Nmax": 5,
+ "params": {
+  "K": 8,
+  "kappa": 1.0,
+  "detunings": [
+   -1.0390314686649147,
+   -0.7154882840444468,
+   -0.7613934351348708,
+   -0.7934613774347554,
+   -1.0645572013991331,
+   -1.0041861887609544,
+   -0.8939863889013604,
+   -1.2635183722251664
+  ],
+  "detuning_rule": "Delta_j = -1 + 0.3*xi_j, xi_j ~ U(-1,1), numpy default_rng(5) after discarding uniform(-1,1,k) draws for k=2,4,6",
+  "J": 0.4,
+  "ring": false,
+  "eta": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "drive_site": 0,
+  "count_site": 0,
+  "U_values": [
+   0.0,
+   0.02,
+   0.04,
+   0.06,
+   0.08,
+   0.1
+  ],
+  "diagram_order_used_in_paper": 3,
+  "maxdeg_used": 5,
+  "fd_step_h": 0.05,
+  "existing_data": "notebook/data/fcs_compare.json"
+ },
+ "results": {
+  "0.06": {
+   "U": 0.06,
+   "contour_r0.1": [
+    [
+     0.8087733110852029,
+     0.9999999999999964,
+     0.9999999999999359
+    ],
+    [
+     0.8644777918123521,
+     1.0656842120621113,
+     1.1970526361863032
+    ],
+    [
+     0.872013682881157,
+     1.0912283665068057,
+     1.2932311791296545
+    ],
+    [
+     0.8732327076761247,
+     1.0996843654780553,
+     1.3358690704869347
+    ],
+    [
+     0.8734508867954721,
+     1.1022956393146413,
+     1.3536620167058504
+    ],
+    [
+     0.8734920862143852,
+     1.103074777753871,
+     1.3607561594740114
+    ]
+   ],
+   "contour_r0.05": [
+    [
+     0.808773311085203,
+     1.000000000000005,
+     1.0000000000003024
+    ],
+    [
+     0.8644777918123523,
+     1.0656842120621206,
+     1.197052636186667
+    ],
+    [
+     0.8720136828811571,
+     1.0912283665068152,
+     1.2932311791300586
+    ],
+    [
+     0.8732327076761249,
+     1.0996843654780655,
+     1.3358690704873581
+    ],
+    [
+     0.8734508867954722,
+     1.1022956393146508,
+     1.3536620167062117
+    ],
+    [
+     0.8734920862143849,
+     1.103074777753917,
+     1.360756159477229
+    ]
+   ],
+   "fd_h0.05": [
+    [
+     0.8091103420909396,
+     0.9997917187368597,
+     1.0002083506951758
+    ],
+    [
+     0.8649090584705434,
+     1.0654568574313839,
+     1.1976967275229382
+    ],
+    [
+     0.8724836940443377,
+     1.091006223747408,
+     1.2943211950753866
+    ],
+    [
+     0.8737189199555615,
+     1.0994743265094367,
+     1.3373310052804805
+    ],
+    [
+     0.8739437169346965,
+     1.102095600390916,
+     1.35539147284159
+    ],
+    [
+     0.8739875346009216,
+     1.1028810093394477,
+     1.362657833059093
+    ]
+   ],
+   "time": 4481.268972396851
+  }
+ }
+}

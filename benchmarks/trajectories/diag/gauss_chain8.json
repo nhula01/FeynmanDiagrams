@@ -1,0 +1,77 @@
+{
+ "description": "Gaussian (HFB) counting cumulants of the eight-site chain with exact chi-derivatives.\n\ntheta_G(chi) from the tilted Riccati system of gaussian_fcs_riccati.py at real chi.  The Riccati equations\ncontain complex conjugates of the tilted moments, so theta_G is not evaluated off the real axis (a complex-chi\ncontour would not be an analytic continuation).  Instead the five-point central differences are taken at\nh = 0.05, 0.025, 0.0125 and Richardson-extrapolated in h^2 twice, which removes the O(h^2) and O(h^4) errors.\nThe h = 0.05 values (the paper's convention) are stored alongside.  usage: gauss_chain_fd.py U1,U2,... -> gauss_chain8.json\n",
+ "params": {
+  "K": 8,
+  "kappa": 1.0,
+  "detunings": [
+   -1.0390314686649147,
+   -0.7154882840444468,
+   -0.7613934351348708,
+   -0.7934613774347554,
+   -1.0645572013991331,
+   -1.0041861887609544,
+   -0.8939863889013604,
+   -1.2635183722251664
+  ],
+  "detuning_rule": "Delta_j = -1 + 0.3*xi_j, xi_j ~ U(-1,1), numpy default_rng(5) after discarding uniform(-1,1,k) draws for k=2,4,6",
+  "J": 0.4,
+  "ring": false,
+  "eta": [
+   1.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "drive_site": 0,
+  "count_site": 0,
+  "U_values": [
+   0.0,
+   0.02,
+   0.04,
+   0.06,
+   0.08,
+   0.1
+  ],
+  "diagram_order_used_in_paper": 3,
+  "maxdeg_used": 5,
+  "fd_step_h": 0.05,
+  "existing_data": "notebook/data/fcs_compare.json"
+ },
+ "results": {
+  "0.00": {
+   "U": 0.0,
+   "fd_h0.05": [
+    0.8091103420909398,
+    0.9997917187368593,
+    1.0002083506952442
+   ],
+   "fd_h0.025": [
+    0.8088575609378736,
+    0.9999479199216061,
+    1.0000520844161476
+   ],
+   "fd_h0.0125": [
+    0.808794373054726,
+    0.9999869793704532,
+    1.0000130209046507
+   ],
+   "richardson": [
+    0.808773311085243,
+    1.0000000000004747,
+    1.0000000000062814
+   ],
+   "richardson_change_last": [
+    6.582328015980465e-10,
+    5.425446758522412e-10,
+    1.6285546244887428e-09
+   ],
+   "max_residual": 0.0,
+   "alpha_hfb_site0_sq": 0.808773311085203,
+   "time": 1.790562391281128
+  }
+ }
+}

@@ -1,0 +1,45 @@
+ 20:23:22 up  4:07,  7 users,  load average: 22.94, 24.77, 41.22
+te N<=2 K=4: wall 0.003s cpu 0.003s g2=1.11152998 load 23
+te_nz N<=2 K=4: wall 0.003s cpu 0.003s g2=1.11152998 load 23
+te N<=2 K=6: wall 0.004s cpu 0.004s g2=1.11987670 load 23
+te_nz N<=2 K=6: wall 0.004s cpu 0.004s g2=1.11987670 load 23
+te N<=2 K=8: wall 0.005s cpu 0.005s g2=1.12036094 load 23
+te_nz N<=2 K=8: wall 0.005s cpu 0.005s g2=1.12036094 load 23
+te N<=2 K=12: wall 0.012s cpu 0.012s g2=1.12017011 load 23
+te_nz N<=2 K=12: wall 0.011s cpu 0.011s g2=1.12017011 load 23
+te N<=2 K=16: wall 0.035s cpu 0.035s g2=1.12017167 load 23
+te_nz N<=2 K=16: wall 0.038s cpu 0.038s g2=1.12017167 load 23
+te N<=2 K=24: wall 0.403s cpu 0.403s g2=1.12017173 load 23
+te_nz N<=2 K=24: wall 0.411s cpu 0.411s g2=1.12017173 load 23
+te N<=2 K=32: wall 2.131s cpu 2.131s g2=1.12017173 load 23
+te_nz N<=2 K=32: wall 2.033s cpu 2.033s g2=1.12017173 load 23
+te N<=4 K=4: wall 0.025s cpu 0.025s g2=1.11613260 load 23
+te_nz N<=4 K=4: wall 0.013s cpu 0.013s g2=1.11613260 load 23
+te N<=4 K=6: wall 0.097s cpu 0.097s g2=1.12592243 load 23
+te_nz N<=4 K=6: wall 0.031s cpu 0.031s g2=1.12592243 load 23
+te N<=4 K=8: wall 0.752s cpu 0.752s g2=1.12621106 load 23
+te_nz N<=4 K=8: wall 0.177s cpu 0.177s g2=1.12621106 load 23
+te N<=4 K=10: wall 4.019s cpu 4.019s g2=1.12595751 load 23
+te_nz N<=4 K=10: wall 0.829s cpu 0.829s g2=1.12595751 load 23
+te N<=4 K=12: wall 11.740s cpu 11.740s g2=1.12592580 load 23
+te_nz N<=4 K=12: wall 2.328s cpu 2.328s g2=1.12592580 load 23
+te N<=4 K=14: wall 30.249s cpu 30.247s g2=1.12592988 load 23
+te_nz N<=4 K=14: wall 6.101s cpu 6.101s g2=1.12592988 load 24
+momentum K=3: {"n_unpruned_N2_wall": 0.052, "n_unpruned_N2_cpu": 0.052, "g2_pruned_N2_wall": 0.112, "g2_pruned_N2_cpu": 0.112, "g2_nz_N2_wall": 0.029, "g2_nz_N2_cpu": 0.029, "g2_nz_N4_wall": 0.23, "g2_nz_N4_cpu": 0.23, "load1": 23.521}
+momentum K=4: {"n_unpruned_N2_wall": 0.246, "n_unpruned_N2_cpu": 0.246, "g2_pruned_N2_wall": 0.331, "g2_pruned_N2_cpu": 0.331, "g2_nz_N2_wall": 0.095, "g2_nz_N2_cpu": 0.095, "g2_nz_N4_wall": 1.104, "g2_nz_N4_cpu": 1.104, "load1": 23.521}
+momentum K=5: {"n_unpruned_N2_wall": 0.845, "n_unpruned_N2_cpu": 0.845, "g2_pruned_N2_wall": 1.072, "g2_pruned_N2_cpu": 1.072, "g2_nz_N2_wall": 0.299, "g2_nz_N2_cpu": 0.299, "g2_nz_N4_wall": 4.103, "g2_nz_N4_cpu": 4.102, "load1": 23.44}
+momentum K=6: {"n_unpruned_N2_wall": 2.439, "n_unpruned_N2_cpu": 2.439, "g2_pruned_N2_wall": 2.93, "g2_pruned_N2_cpu": 2.928, "g2_nz_N2_wall": 0.751, "g2_nz_N2_cpu": 0.751, "g2_nz_N4_wall": 12.166, "g2_nz_N4_cpu": 12.165, "load1": 23.342}
+momentum K=7: {"g2_pruned_N2_wall": 6.585, "g2_pruned_N2_cpu": 6.584, "g2_nz_N2_wall": 1.648, "g2_nz_N2_cpu": 1.647, "load1": 23.289}
+momentum K=8: {"g2_pruned_N2_wall": 14.571, "g2_pruned_N2_cpu": 14.569, "g2_nz_N2_wall": 3.488, "g2_nz_N2_cpu": 3.488, "load1": 23.274}
+exact evolve K=2 nmax=5: 0.16s g2=1.097066
+exact spsolve K=2 nmax=5: 0.02s
+exact evolve K=3 nmax=5: 5.42s g2=1.127163
+exact spsolve K=3 nmax=5: 180.07s
+exact evolve K=4 nmax=5: 328.24s g2=1.102371
+exact evolve K=2 nmax=4: 0.10s g2=0.982350
+exact spsolve K=2 nmax=4: 0.01s
+exact evolve K=3 nmax=4: 0.98s g2=1.047571
+exact spsolve K=3 nmax=4: 2.70s
+exact evolve K=4 nmax=4: 37.49s g2=1.041438
+exact evolve K=5 nmax=4: 1426.03s g2=1.042622
+ 20:59:02 up  4:43,  9 users,  load average: 16.06, 13.65, 16.14
