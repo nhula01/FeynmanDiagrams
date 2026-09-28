@@ -37,8 +37,10 @@ def kerr():
     a, ad, b, bd = mode_ops(alpha)
     HK = scale(0.5, mul(mul(ad, ad), mul(a, a)))           # U = 1
     mod = Model(1, z, lambda X: 0*X, I1, HK, vertex_drop=4)
-    Nmax = 16
-    sn = mod.series(mul(ad, a), Nmax).real                 # <a^dag a>^(N) / U^N
+    Nmax = 16                                             # orders shown in Fig. 5
+    Ncoeff = 40                                           # Sec. V.A root-test value quoted at N=40
+    sn_all = mod.series(mul(ad, a), Ncoeff).real          # <a^dag a>^(N) / U^N
+    sn = sn_all[:Nmax+1]
     Us = np.linspace(0, 0.3, 61)
     Nc = 32; A = destroy(Nc); Ad = A.conj().T
     exact = []
@@ -77,7 +79,7 @@ def kerr():
     ax2.text(0.45, 0.95, "(b)", transform=ax2.transAxes, ha="left", va="top")
     fig.tight_layout(pad=0.3, h_pad=0.6)
     fig.savefig("fig_kerr_convergence.pdf")
-    numbers["kerr_coeffs"] = [float(x) for x in sn]
+    numbers["kerr_coeffs"] = [float(x) for x in sn_all]
     numbers["kerr_exact_vs_mf"] = {f"{U:.2f}": [float(e), float(m)] for U, e, m in zip(Us[::10], exact[::10], np.array(mf)[::10])}
     numbers["kerr_alpha"] = float(abs(alpha))
 

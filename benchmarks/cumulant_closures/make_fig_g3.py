@@ -30,8 +30,10 @@ S = {'closure2': dict(c="#d95f02", ls="--", mk="s", lab="2nd-order cumulant"),
      'diagrams4': dict(c="#1b9e77", ls="-", mk="o", lab=r"diagrams $N\leq4$")}
 for m in ('closure2', 'closure3', 'closure4'):
     S[m]['lab'] += f" ({nv[m[-1]]} var., {tfmt(tmed(m))})"
+DC = R.get('diagram_cost')
 for m in ('diagrams2', 'diagrams4'):
-    S[m]['lab'] += f" ({tfmt(tmed(m))})"
+    # cost with the pruning of Sec. VI, in the sparse-matrix form (all couplings at once); falls back to the unpruned run
+    S[m]['lab'] += f" ({tfmt(DC['sparse_all_U'][m[-1]])}, all $U$)" if DC else f" ({tfmt(tmed(m))})"
 fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(COLW, 4.3), sharex=True)
 exg3 = np.array([r['exact_g3'] for r in tab])
 ax1.plot(U, exg3, "k-", lw=1.8, label="exact", zorder=5)

@@ -115,6 +115,20 @@ for U in U11:
         row['ratio_closure4_err_over_diag4_err'] = {q: r['closure4'][f'err_{q}']/r['diagrams4'][f'err_{q}'] for q in ('g2', 'g3')}
     tab.append(row)
 out['table_fig11'] = tab
+# cost of the diagrams with the pruning of Sec. VI (labels that cannot return to the steady state discarded) and in the
+# sparse-matrix form of engines/sparse_ring.py, from ../truncation/sparse_ring_timing.json; the 't' entries above are the
+# unpruned symbolic recursion of diag_run.py
+sp = os.path.join(HERE, '..', 'truncation', 'sparse_ring_timing.json')
+if os.path.exists(sp):
+    st = json.load(open(sp))['K3']
+    out['diagram_cost'] = dict(note="seconds on one core for n, <(a0^dag)^2 a0^2>, <(a0^dag)^3 a0^3> through the stated order at K=3. "
+                                    "unpruned: diag_run.py (multimode.Ring.series; the 't' of table_fig11). pruned: the same recursion with the "
+                                    "degree pruning of ring_trunc.series_pruned, per coupling. sparse_all_U: engines/sparse_ring.py, the map V G0 "
+                                    "stored once as a sparse matrix over the zero-momentum labels; one run gives every coupling.",
+                               unpruned_per_U={'2': float(np.median([r['diagrams2']['t'] for r in tab])), '4': float(np.median([r['diagrams4']['t'] for r in tab]))},
+                               pruned_per_U={k: v['t_symbolic_per_U'] for k, v in st.items()},
+                               sparse_all_U={k: v['t_sparse_all_U'] for k, v in st.items()},
+                               labels_per_layer={k: v['labels_per_layer'] for k, v in st.items()})
 out['timing_note'] = ("'t' in table_fig11 and t_*_original_run / t_same_run_as_closures: wall-clock per evaluation (build + steady state for the closures; "
     "n, g2 and g3 series through the stated order for the diagrams) measured in one process, one after the other, in the run of 2026-09-24 15:33-16:13 "
     "(run_cumulants.py). t_*_1core: single-thread re-measurement on 2026-09-24 17:30-18:40 while the node was oversubscribed (load 80-150 on 96 threads); "

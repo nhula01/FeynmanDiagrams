@@ -1861,119 +1861,119 @@
    "0.020": {
     "diff_n_vs_cumulant_py": 1.1102230246251565e-16,
     "diff_g2_vs_cumulant_py": 2.220446049250313e-16,
-    "diff_n_vs_hfb_chain": 1.0114131754335176e-13,
-    "diff_g2_vs_hfb_chain": 6.854516954035716e-13,
-    "g3_hfb_chain": 1.0514364215875798,
+    "diff_n_vs_hfb_chain": 1.3378187446733136e-14,
+    "diff_g2_vs_hfb_chain": 9.459100169806334e-14,
+    "g3_hfb_chain": 1.0514364215851997,
     "g3_closure2": 1.0514364215854894,
-    "diff_g3_vs_hfb_chain": 2.0903279107642447e-12
+    "diff_g3_vs_hfb_chain": 2.8976820942716586e-13
    },
    "0.025": {
     "diff_n_vs_cumulant_py": 2.403632848313464e-14,
     "diff_g2_vs_cumulant_py": 1.6275869541004795e-13,
-    "diff_n_vs_hfb_chain": 5.6288307348495437e-14,
-    "diff_g2_vs_hfb_chain": 3.8968828164342995e-13,
-    "g3_hfb_chain": 1.064868019884596,
+    "diff_n_vs_hfb_chain": 1.532107773982716e-14,
+    "diff_g2_vs_hfb_chain": 9.614531393253856e-14,
+    "g3_hfb_chain": 1.064868019883698,
     "g3_closure2": 1.0648680198834037,
-    "diff_g3_vs_hfb_chain": 1.192157483842493e-12
+    "diff_g3_vs_hfb_chain": 2.942091015256665e-13
    },
    "0.050": {
     "diff_n_vs_cumulant_py": 1.9484414082171497e-14,
     "diff_g2_vs_cumulant_py": 1.3389289676979388e-13,
-    "diff_n_vs_hfb_chain": 2.986499936241671e-14,
-    "diff_g2_vs_hfb_chain": 2.0450308113595383e-13,
-    "g3_hfb_chain": 1.1356756779042148,
+    "diff_n_vs_hfb_chain": 3.5915714846623814e-14,
+    "diff_g2_vs_hfb_chain": 2.389199948993337e-13,
+    "g3_hfb_chain": 1.1356756779043242,
     "g3_closure2": 1.1356756779035748,
-    "diff_g3_vs_hfb_chain": 6.399325513939402e-13
+    "diff_g3_vs_hfb_chain": 7.494005416219807e-13
    },
    "0.075": {
     "diff_n_vs_cumulant_py": 9.43689570931383e-16,
     "diff_g2_vs_cumulant_py": 6.439293542825908e-15,
-    "diff_n_vs_hfb_chain": 4.274358644806853e-15,
-    "diff_g2_vs_hfb_chain": 2.2870594307278225e-14,
-    "g3_hfb_chain": 1.2129827138115934,
+    "diff_n_vs_hfb_chain": 5.551115123125783e-15,
+    "diff_g2_vs_hfb_chain": 3.574918139293004e-14,
+    "g3_hfb_chain": 1.2129827138115514,
     "g3_closure2": 1.2129827138116616,
-    "diff_g3_vs_hfb_chain": 6.816769371198461e-14
+    "diff_g3_vs_hfb_chain": 1.1013412404281553e-13
    },
    "0.100": {
     "diff_n_vs_cumulant_py": 4.773959005888173e-15,
     "diff_g2_vs_cumulant_py": 2.731148640577885e-14,
-    "diff_n_vs_hfb_chain": 4.0245584642661925e-14,
-    "diff_g2_vs_hfb_chain": 2.5224267119483557e-13,
-    "g3_hfb_chain": 1.2973890528637093,
+    "diff_n_vs_hfb_chain": 2.0761170560490427e-14,
+    "diff_g2_vs_hfb_chain": 1.2434497875801753e-13,
+    "g3_hfb_chain": 1.297389052862474,
     "g3_closure2": 1.2973890528628857,
-    "diff_g3_vs_hfb_chain": 8.235634396669411e-13
+    "diff_g3_vs_hfb_chain": 4.1167069753100805e-13
    },
    "0.125": {
     "diff_n_vs_cumulant_py": 5.551115123125783e-17,
     "diff_g2_vs_cumulant_py": 8.881784197001252e-16,
-    "diff_n_vs_hfb_chain": 1.4876988529977098e-14,
-    "diff_g2_vs_hfb_chain": 9.614531393253856e-14,
-    "g3_hfb_chain": 1.3895298201726611,
+    "diff_n_vs_hfb_chain": 2.375877272697835e-14,
+    "diff_g2_vs_hfb_chain": 1.5409895581797173e-13,
+    "g3_hfb_chain": 1.3895298201728563,
     "g3_closure2": 1.389529820172341,
-    "diff_g3_vs_hfb_chain": 3.2018832030189515e-13
+    "diff_g3_vs_hfb_chain": 5.153655280309977e-13
    },
    "0.150": {
     "diff_n_vs_cumulant_py": 2.0539125955565396e-15,
     "diff_g2_vs_cumulant_py": 8.881784197001252e-15,
-    "diff_n_vs_hfb_chain": 1.1102230246251565e-16,
-    "diff_g2_vs_hfb_chain": 9.547918011776346e-15,
-    "g3_hfb_chain": 1.4900651639407991,
+    "diff_n_vs_hfb_chain": 2.2648549702353193e-14,
+    "diff_g2_vs_hfb_chain": 1.1834977442504169e-13,
+    "g3_hfb_chain": 1.4900651639404257,
     "g3_closure2": 1.4900651639408329,
-    "diff_g3_vs_hfb_chain": 3.375077994860476e-14
+    "diff_g3_vs_hfb_chain": 4.072298054325074e-13
    },
    "0.175": {
     "diff_n_vs_cumulant_py": 0.0,
     "diff_g2_vs_cumulant_py": 2.220446049250313e-16,
-    "diff_n_vs_hfb_chain": 9.992007221626409e-15,
-    "diff_g2_vs_hfb_chain": 4.973799150320701e-14,
-    "g3_hfb_chain": 1.5996618161036642,
+    "diff_n_vs_hfb_chain": 1.1102230246251565e-16,
+    "diff_g2_vs_hfb_chain": 1.9984014443252818e-15,
+    "g3_hfb_chain": 1.5996618161034937,
     "g3_closure2": 1.599661816103492,
-    "diff_g3_vs_hfb_chain": 1.723066134218243e-13
+    "diff_g3_vs_hfb_chain": 1.7763568394002505e-15
    },
    "0.200": {
     "diff_n_vs_cumulant_py": 1.1102230246251565e-16,
     "diff_g2_vs_cumulant_py": 1.3322676295501878e-15,
-    "diff_n_vs_hfb_chain": 1.887379141862766e-15,
-    "diff_g2_vs_hfb_chain": 1.1102230246251565e-14,
-    "g3_hfb_chain": 1.7189615021565963,
+    "diff_n_vs_hfb_chain": 1.659783421814609e-14,
+    "diff_g2_vs_hfb_chain": 1.0080825063596421e-13,
+    "g3_hfb_chain": 1.7189615021569176,
     "g3_closure2": 1.718961502156554,
-    "diff_g3_vs_hfb_chain": 4.218847493575595e-14
+    "diff_g3_vs_hfb_chain": 3.6348701826227625e-13
    },
    "0.225": {
     "diff_n_vs_cumulant_py": 3.219646771412954e-15,
     "diff_g2_vs_cumulant_py": 1.4432899320127035e-14,
-    "diff_n_vs_hfb_chain": 4.274358644806853e-15,
-    "diff_g2_vs_hfb_chain": 1.8207657603852567e-14,
-    "g3_hfb_chain": 1.848528362852772,
+    "diff_n_vs_hfb_chain": 7.105427357601002e-15,
+    "diff_g2_vs_hfb_chain": 1.3322676295501878e-15,
+    "g3_hfb_chain": 1.8485283628527087,
     "g3_closure2": 1.8485283628527072,
-    "diff_g3_vs_hfb_chain": 6.483702463810914e-14
+    "diff_g3_vs_hfb_chain": 1.5543122344752192e-15
    },
    "0.250": {
     "diff_n_vs_cumulant_py": 3.5665914666083154e-13,
     "diff_g2_vs_cumulant_py": 5.444311668156843e-12,
-    "diff_n_vs_hfb_chain": 3.290701044988964e-13,
-    "diff_g2_vs_hfb_chain": 5.320410778608675e-12,
-    "g3_hfb_chain": 1.9887627702287907,
+    "diff_n_vs_hfb_chain": 3.56326079753444e-13,
+    "diff_g2_vs_hfb_chain": 5.438094419218942e-12,
+    "g3_hfb_chain": 1.9887627702283437,
     "g3_closure2": 1.9887627702470516,
-    "diff_g3_vs_hfb_chain": 1.8260948309034575e-11
+    "diff_g3_vs_hfb_chain": 1.8707924098748663e-11
    },
    "0.275": {
-    "diff_n_vs_cumulant_py": 2.1471713296250527e-13,
+    "diff_n_vs_cumulant_py": 2.148281552649678e-13,
     "diff_g2_vs_cumulant_py": 7.744915819785092e-13,
-    "diff_n_vs_hfb_chain": 1.8385293287792592e-13,
-    "diff_g2_vs_hfb_chain": 6.330491686412643e-13,
-    "g3_hfb_chain": 2.139761287820362,
+    "diff_n_vs_hfb_chain": 2.1466162181127402e-13,
+    "diff_g2_vs_hfb_chain": 7.73159314348959e-13,
+    "g3_hfb_chain": 2.139761287820896,
     "g3_closure2": 2.1397612878178784,
-    "diff_g3_vs_hfb_chain": 2.48334686148155e-12
+    "diff_g3_vs_hfb_chain": 3.0175861809311755e-12
    },
    "0.300": {
     "diff_n_vs_cumulant_py": 3.785305402459471e-13,
     "diff_g2_vs_cumulant_py": 1.3453682612407647e-12,
-    "diff_n_vs_hfb_chain": 3.790856517582597e-13,
-    "diff_g2_vs_hfb_chain": 1.362243651215067e-12,
-    "g3_hfb_chain": 2.3010908591675796,
+    "diff_n_vs_hfb_chain": 3.7941871866564725e-13,
+    "diff_g2_vs_hfb_chain": 1.6271428648906294e-12,
+    "g3_hfb_chain": 2.3010908591667385,
     "g3_closure2": 2.301090859173061,
-    "diff_g3_vs_hfb_chain": 5.481393117179323e-12
+    "diff_g3_vs_hfb_chain": 6.3224980806353415e-12
    }
   },
   "second_order_max_abs_diff": {
@@ -1983,17 +1983,17 @@
   "hfb_chain_g3_note": "hfb_chain.py evaluates the Gaussian <a^dag^3 a^3> with 18 n|m|^2 in the cubic fluctuation term; Wick's theorem gives <b^dag^3 b^3> = 6n^3 + 9n|m|^2 (checked on a displaced squeezed thermal state in QuTiP). The g3 difference in second_order_vs_existing is entirely this term; n and g2 agree to machine precision.",
   "U0_coherent": {
    "2": {
-    "n_minus_alpha2": 1.1102230246251565e-16,
+    "n_minus_alpha2": 2.220446049250313e-16,
     "g2_minus_1": 1.1102230246251565e-15,
     "g3_minus_1": 6.217248937900877e-15
    },
    "3": {
-    "n_minus_alpha2": 5.551115123125783e-17,
+    "n_minus_alpha2": 1.6653345369377348e-16,
     "g2_minus_1": 4.440892098500626e-16,
     "g3_minus_1": 2.220446049250313e-16
    },
    "4": {
-    "n_minus_alpha2": 0.0,
+    "n_minus_alpha2": 1.1102230246251565e-16,
     "g2_minus_1": 8.881784197001252e-16,
     "g3_minus_1": 1.3211653993039363e-14
    }
@@ -2418,6 +2418,106 @@
    }
   }
  ],
+ "diagram_cost": {
+  "note": "seconds on one core for n, <(a0^dag)^2 a0^2>, <(a0^dag)^3 a0^3> through the stated order at K=3. unpruned: diag_run.py (multimode.Ring.series; the 't' of table_fig11). pruned: the same recursion with the degree pruning of ring_trunc.series_pruned, per coupling. sparse_all_U: engines/sparse_ring.py, the map V G0 stored once as a sparse matrix over the zero-momentum labels; one run gives every coupling.",
+  "unpruned_per_U": {
+   "2": 1.7,
+   "4": 37.1
+  },
+  "pruned_per_U": {
+   "2": 0.21406006813049316,
+   "4": 1.0981242656707764,
+   "10": null
+  },
+  "sparse_all_U": {
+   "2": 0.02980661392211914,
+   "4": 0.1130363941192627,
+   "10": 4.164576768875122
+  },
+  "labels_per_layer": {
+   "2": {
+    "n": [
+     6,
+     10,
+     1
+    ],
+    "n2": [
+     34,
+     10,
+     1
+    ],
+    "n3": [
+     62,
+     10,
+     1
+    ]
+   },
+   "4": {
+    "n": [
+     6,
+     28,
+     62,
+     10,
+     1
+    ],
+    "n2": [
+     34,
+     133,
+     72,
+     10,
+     1
+    ],
+    "n3": [
+     136,
+     236,
+     72,
+     10,
+     1
+    ]
+   },
+   "10": {
+    "n": [
+     6,
+     28,
+     133,
+     408,
+     1045,
+     1704,
+     975,
+     312,
+     72,
+     10,
+     1
+    ],
+    "n2": [
+     34,
+     133,
+     408,
+     1045,
+     2355,
+     2184,
+     1005,
+     312,
+     72,
+     10,
+     1
+    ],
+    "n3": [
+     136,
+     408,
+     1045,
+     2355,
+     3702,
+     2484,
+     1005,
+     312,
+     72,
+     10,
+     1
+    ]
+   }
+  }
+ },
  "timing_note": "'t' in table_fig11 and t_*_original_run / t_same_run_as_closures: wall-clock per evaluation (build + steady state for the closures; n, g2 and g3 series through the stated order for the diagrams) measured in one process, one after the other, in the run of 2026-09-24 15:33-16:13 (run_cumulants.py). t_*_1core: single-thread re-measurement on 2026-09-24 17:30-18:40 while the node was oversubscribed (load 80-150 on 96 threads); those numbers scatter by up to a factor 10 between identical calls and are kept only as a record.",
  "optimal_truncation_diagrams": {
   "source": "../truncation/fig_g3_errorbars.json",
@@ -2637,11 +2737,11 @@
     },
     "g3": {
      "value": 1.8404071118161993,
-     "delta": 0.0005896478803861793,
+     "delta": 0.0005896478803859573,
      "N_star": 8,
      "their_exact": 1.8314629066618155,
      "err_vs_converged_exact": 0.004929057005746973,
-     "true_abs_error_over_delta": 15.309097825263251,
+     "true_abs_error_over_delta": 15.309097825269015,
      "best_closure_err": 0.008275184462923524,
      "best_closure_err_over_optimal_diagram_err": 1.6788575285851177,
      "their_exact_rel_diff_from_converged": 4.51964763281687e-05
@@ -2687,11 +2787,11 @@
     },
     "g3": {
      "value": 2.2490640441511403,
-     "delta": 0.0029539743838755683,
+     "delta": 0.0029539743838751242,
      "N_star": 8,
      "their_exact": 2.1821791985653625,
      "err_vs_converged_exact": 0.03114228851116807,
-     "true_abs_error_over_delta": 22.994661629903778,
+     "true_abs_error_over_delta": 22.994661629907235,
      "best_closure_err": 0.019621231469513556,
      "best_closure_err_over_optimal_diagram_err": 0.630051046585003,
      "their_exact_rel_diff_from_converged": 0.00047718009711883447

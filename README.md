@@ -6,7 +6,9 @@ from mean field to non-Gaussian photon correlations" (P. Ehlers, P. H. Nguyen, D
 ## Layout
 
     engines/                   the diagram engines and reference solvers (importable modules)
-    notebook/                  the paper notebook, its cached exact data (data/) and its output figures
+    notebooks/                 one notebook per section of the paper (00-10): the calculation, the regenerated figure or
+                               table, and the numbers the text quotes for it; verify_numbers.py checks every number
+    notebook/                  the original companion notebook, its cached exact data (data/) and its output figures
     benchmarks/
       cumulant_closures/       Fig. 9: cumulant closures of order 2-4 against the displaced-frame exact reference
       truncation/              Figs. 5 and 8, Table V: optimal truncation, contour cumulants, runtimes, label counts
@@ -24,6 +26,10 @@ Library modules
     engine.py                  single-mode diagram engine: vertex table, shift relations, propagators, partial sums
     multimode.py               multimode (momentum-space) engine for rings and chains
     tensor_engine.py           tensor implementation for large K; label enumeration and contraction
+    sparse_ring.py             the ring recursion X_N = V G0 X_{N-1} stored once as a sparse matrix over the reachable
+                               zero-momentum labels; one run gives every order, observable and coupling (the vertex is
+                               proportional to U, so the N-th order term is c_N U^N). check_sparse_ring.py validates it
+                               against multimode.Ring with the same pruning (agreement 1e-16)
     lattice.py, chain_diagrams.py   lattice geometry, disorder realizations, chain diagram sets
     fcs.py, fcs_multi.py       counting-field (tilted) engines, single mode and multimode; full
                                Rayleigh-Schroedinger recursion for theta_N; contour_cumulants, cumulants_contour
@@ -43,6 +49,32 @@ Checks
     check_wick.py              Wick inversion on a squeezed-thermal steady state
     check_inversion.py         eigenoperator inversion
     k3_validate.py             K = 3 ring against the exact steady state
+
+## notebooks/ — reproducing the paper section by section
+
+    00_engine_checks                 engine validation (SM Table SII)
+    01_kerr_cavity_fig5              Sec. V.A, Fig. 5
+    02_kerr_switch_on_figS1          finite-time rules, SM Fig. S1
+    03_cubic_nonlinearity_figS5      SM Fig. S5
+    04_atom_in_cavity_figS7          SM Fig. S7
+    05_driven_atom_fig7              Sec. V.B, Fig. 7
+    06_kerr_ring_fig8                Sec. VI, Fig. 8 (engine cross-checks, K = 3 ring, disorder, timings)
+    07_cumulant_closures_fig9        Sec. VI.B, Fig. 9, SM Table SI, and the sparse-matrix engine
+    08_counting_statistics_tableV    Sec. VII, Table V
+    09_eight_site_chain_fig10        Sec. VII, Fig. 10 and the quantum-jump benchmark
+    10_verification                  runs verify_numbers.py
+
+Each notebook has a Part A that runs the calculation of that section (FAST = True: reduced orders and cutoffs, seconds
+to a minute each; FAST = False: the orders and cutoffs of the paper) and a Part B that regenerates the paper's figure or
+table from the result files in benchmarks/ and prints the numbers the text quotes next to the values in the files; each
+Part B names the script that recomputes the raw inputs. Run them in order from notebooks/ (about 15 minutes in total).
+
+    python3 notebooks/verify_numbers.py --report notebooks/verification_report.md
+
+checks every number quoted in Secs. V-VII of the paper, Tables V and SI, and the quantum-jump section of the
+Supplemental Material against the result files (232 checks). Tables V and SI are compared with the LaTeX sources if
+PAPER_DIR points to them, otherwise with the snapshots in notebooks/paper_reference/. engines/numbers.json holds the
+quoted numbers for Figs. 5 and 7 and SM Figs. S1, S5, S7; make_figures.py rewrites it.
 
 ## notebook/
 
@@ -66,7 +98,7 @@ scripts, the raw outputs, and the result files from which the figures and tables
                          raw inputs diag_U*.json, exactD_U*.json, closure_partial.json, closure_timing_1core.json;
                          result cumulant_closure_results.json
     truncation/          kerr_trunc.py, exact_pool.py, exact_disp_pool.py, fcs_nz.py, fcs_nz_md.py, k1_radius.py,
-                         table5_contour.py, label_counts.py, timing_v2.py, timing_v3.py
+                         table5_contour.py, label_counts.py, timing_v2.py, timing_v3.py, sparse_ring_timing.py
                          (raw outputs *_raw*.json, timing*_*.json, pass3/)
                          ->  assemble_truncation.py  (writes truncation_results.json, table5_corrected.json,
                              table5_fragment.tex, timing_results.json, fig_kerr_convergence.pdf, fig_ring.pdf)
