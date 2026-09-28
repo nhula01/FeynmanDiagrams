@@ -195,28 +195,33 @@ lines.append(r"\end{tabular}")
 open('table5_fragment.tex', 'w').write("\n".join(lines) + "\n")
 # =========================================================== eight-site chain: from the trajectories track
 TR = os.path.join(_ROOT, 'benchmarks', 'trajectories')
-fcs = dict(description="Disordered eight-site Kerr chain (revision_params.json chain8_fcs), counting on site 0. Diagram partial sums (orders 0..6, "
-                       "maxdeg 5), Gaussian and mean field from revision/trajectories/chain8_contour.json (contour derivatives |chi|=0.1; notebook "
-                       "recursion fcs_multi.TiltedChain.theta_series). Optimal truncation applied here with the common rule. rs_check: the same "
-                       "diagrams recomputed here with the full Rayleigh-Schroedinger recursion (TiltedNZ in fcs_nz.py).",
-           instruction="Plot fano and c3c1 versus U with yerr = delta (successive-difference error bar at N*). Use the *_fullRS columns if the "
-                       "lead adopts the corrected recursion; the notebook-recursion columns reproduce the trajectories-track file.",
+fcs = dict(description="Disordered eight-site Kerr chain (revision_params.json chain8_fcs), counting on site 0. "
+                       "chain8_contour.json stores the corrected full Rayleigh-Schroedinger diagram series under diagrams_maxdeg5 and the legacy "
+                       "notebook recursion under diagrams_maxdeg5_notebook_recursion; both are assembled here with optimal-truncation error bars. "
+                       "The fcs_nz raw outputs in this directory independently reproduce both series.",
+           instruction="Plot fano and c3c1 versus U with yerr = delta (successive-difference error bar at N*) from fullRS. "
+                       "notebookRS is retained only as a legacy-recursion comparison.",
            source="benchmarks/trajectories/chain8_contour.json", U=[], results={})
-if ex(fcs["source"]):
-    cc8 = J(fcs["source"])
+fcs_source = os.path.join(TR, 'chain8_contour.json')
+if ex(fcs_source):
+    cc8 = J(fcs_source)
     for key, rec in sorted(cc8["results"].items()):
         U = rec["U"]; fcs["U"].append(U)
-        arr = np.array(rec["diagrams_maxdeg5"]["orders"], float)   # (7, 3) c1, c2/c1, c3/c1
+        full_arr = np.array(rec["diagrams_maxdeg5"]["orders"], float)
+        notebook_rec = rec.get("diagrams_maxdeg5_notebook_recursion", rec["diagrams_maxdeg5"])
+        notebook_arr = np.array(notebook_rec["orders"], float)
         out = dict(U=U, gaussian=rec.get("gaussian"), mean_field=rec.get("mean_field"),
-                   notebookRS={q: truncation_record(arr[:, i]) for i, q in enumerate(("c1", "fano", "c3c1"))} if U > 0 else None)
+                   fullRS={q: truncation_record(full_arr[:, i]) for i, q in enumerate(("c1", "fano", "c3c1"))},
+                   notebookRS={q: truncation_record(notebook_arr[:, i]) for i, q in enumerate(("c1", "fano", "c3c1"))})
         grp = [(k, v) for k, v in c8g.items() if k[0] == round(U, 3)]
         for (u, N, md, rs, r, M), pts in grp:
             if len(pts) < M//2+1: continue
             cn = taylor_half([pts[j] for j in range(M//2+1)], r, M)
             seq = dict(c1=cn[1].real, fano=(cn[2]/cn[1]).real, c3c1=(cn[3]/cn[1]).real)
-            out["fullRS" if rs else "notebookRS_here"] = {q: truncation_record(seq[q]) for q in seq}
-        if out.get("notebookRS_here") and out.get("notebookRS"):
-            out["check_vs_trajectories_file_maxdiff"] = float(max(np.max(np.abs(np.array(out["notebookRS_here"][q]["partial_sums"]) - np.array(out["notebookRS"][q]["partial_sums"]))) for q in ("c1", "fano", "c3c1")))
+            here = {q: truncation_record(seq[q]) for q in seq}
+            tag = "fullRS" if rs else "notebookRS"
+            diff = float(max(np.max(np.abs(np.array(here[q]["partial_sums"]) - np.array(out[tag][q]["partial_sums"]))) for q in ("c1", "fano", "c3c1")))
+            if diff > 1e-10: raise RuntimeError(f"chain8 {tag} cross-check failed at U={U}: maxdiff={diff}")
         fcs["results"][key] = out
 json.dump(fcs, open('fig_fcs_errorbars.json', 'w'), indent=1)
 res["chain8"] = fcs
