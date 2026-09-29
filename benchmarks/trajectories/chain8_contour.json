@@ -1,5 +1,5 @@
 {
- "description": "Eight-site chain (revision_params.json chain8_fcs), counting on site 0. Diagrams: partial sums of theta_N(chi) through order N with the full Rayleigh-Schroedinger recursion (TiltedNZ, revision/truncation/fcs_nz.py; 'diagrams_maxdeg5_notebook_recursion' = fcs_multi.TiltedChain, which omits -sum_k theta_k psi_(N-k)), chi-derivatives from a Cauchy contour |chi|=0.1 (16 points; |chi|=0.05 check). Gaussian: stationary point of the tilted Riccati system (root finder), five-point differences at h=0.05,0.025,0.0125 Richardson-extrapolated. Mean field: c1=kappa|alpha_0|^2, Fano=c3/c1=1. 'fd_h0.05' = the paper's finite-difference convention. Entries are [c1/kappa, c2/c1, c3/c1]. Optimal truncation: order N>=1 minimizing |S_N - S_{N-1}|, error = that difference.",
+ "description": "Eight-site chain (revision_params.json chain8_fcs), counting on site 0. Diagrams: partial sums of theta_N(chi) through order N with the full Rayleigh-Schroedinger recursion (TiltedNZ, revision/truncation/fcs_nz.py; 'diagrams_maxdeg5_notebook_recursion' = fcs_multi.TiltedChain, which omits -sum_k theta_k psi_(N-k)), chi-derivatives from a Cauchy contour |chi|=0.1 (16 points; |chi|=0.05 check). Gaussian: stationary point of the tilted Riccati system (root finder), five-point differences at h=0.05,0.025,0.0125 Richardson-extrapolated. Mean field: c1=kappa|alpha_0|^2, Fano=c3/c1=1. 'fd_h0.05' = the paper's finite-difference convention. Entries are [c1/kappa, c2/c1, c3/c1]; the diagrams are reported at sixth order, the highest computed.",
  "results": {
   "0.00": {
    "U": 0.0,
@@ -427,48 +427,7 @@
     0.8280457281348553,
     1.0,
     1.0
-   ],
-   "optimal_truncation_maxdeg5": {
-    "c1": {
-     "N_star": 6,
-     "value": 0.8282268155436213,
-     "delta": 1.0805379480061106e-08,
-     "differences": [
-      0.01856816024238306,
-      0.0008373212298673494,
-      4.514906648012129e-05,
-      2.6935693747676126e-06,
-      1.6954493364806922e-07,
-      1.0805379480061106e-08
-     ]
-    },
-    "fano": {
-     "N_star": 6,
-     "value": 1.026280981918729,
-     "delta": 3.2821970963325953e-07,
-     "differences": [
-      0.022877511712012355,
-      0.003031744544284898,
-      0.00033376553966890654,
-      3.423710726280227e-05,
-      3.3947957940316797e-06,
-      3.2821970963325953e-07
-     ]
-    },
-    "c3c1": {
-     "N_star": 6,
-     "value": 1.0819570069063968,
-     "delta": 3.8025176662959126e-06,
-     "differences": [
-      0.06863253513604717,
-      0.011381971314129213,
-      0.0016766228376197123,
-      0.0002316779304607497,
-      3.0397170537765916e-05,
-      3.8025176662959126e-06
-     ]
-    }
-   }
+   ]
   },
   "0.04": {
    "U": 0.04,
@@ -780,48 +739,7 @@
     0.848857821097447,
     1.0,
     1.0
-   ],
-   "optimal_truncation_maxdeg5": {
-    "c1": {
-     "N_star": 6,
-     "value": 0.8496693231134512,
-     "delta": 6.915442950505835e-07,
-     "differences": [
-      0.03713632048476612,
-      0.0033492849194689533,
-      0.00036119253184208056,
-      4.309710999472749e-05,
-      5.425437881401152e-06,
-      6.915442950505835e-07
-     ]
-    },
-    "fano": {
-     "N_star": 6,
-     "value": 1.0597386955147767,
-     "delta": 2.0448731218314364e-05,
-     "differences": [
-      0.044750676653254606,
-      0.011739702096797755,
-      0.0025898812778999414,
-      0.0005323075696610502,
-      0.00010567918594861503,
-      2.0448731218314364e-05
-     ]
-    },
-    "c3c1": {
-     "N_star": 6,
-     "value": 1.196216748145309,
-     "delta": 0.00023712679632859057,
-     "differences": [
-      0.13425202995976637,
-      0.04413901335293002,
-      0.013033378581257749,
-      0.00360775906846178,
-      0.0009474403866285286,
-      0.00023712679632859057
-     ]
-    }
-   }
+   ]
   },
   "0.06": {
    "U": 0.06,
@@ -1133,48 +1051,7 @@
     0.8714376031565657,
     1.0,
     1.0
-   ],
-   "optimal_truncation_maxdeg5": {
-    "c1": {
-     "N_star": 6,
-     "value": 0.8734999633361212,
-     "delta": 7.877121735999637e-06,
-     "differences": [
-      0.055704480727149175,
-      0.007535891068804923,
-      0.0012190247949677158,
-      0.00021817911934740586,
-      4.119941891311818e-05,
-      7.877121735999637e-06
-     ]
-    },
-    "fano": {
-     "N_star": 6,
-     "value": 1.103300418434142,
-     "delta": 0.00022617827132886958,
-     "differences": [
-      0.06568421206211483,
-      0.025544154444694378,
-      0.008455998971250267,
-      0.002611273836585992,
-      0.0007786008481711626,
-      0.00022617827132886958
-     ]
-    },
-    "c3c1": {
-     "N_star": 6,
-     "value": 1.3632166288745056,
-     "delta": 0.0026258492510102815,
-     "differences": [
-      0.19705263618636726,
-      0.09617854294335126,
-      0.04263789135729201,
-      0.017730787582650454,
-      0.006990921553898355,
-      0.0026258492510102815
-     ]
-    }
-   }
+   ]
   },
   "0.08": {
    "U": 0.08,
@@ -1486,48 +1363,7 @@
     0.8960645125283191,
     1.0,
     1.0
-   ],
-   "optimal_truncation_maxdeg5": {
-    "c1": {
-     "N_star": 6,
-     "value": 0.900240058594356,
-     "delta": 4.4258834884347564e-05,
-     "differences": [
-      0.07427264096953234,
-      0.013397139677875258,
-      0.002889540254738421,
-      0.0006895537599127533,
-      0.00017361401220994388,
-      4.4258834884347564e-05
-     ]
-    },
-    "fano": {
-     "N_star": 6,
-     "value": 1.1613257528027694,
-     "delta": 0.0012302669993318194,
-     "differences": [
-      0.08573739183601337,
-      0.04387459989934572,
-      0.019338822196192096,
-      0.007971518964589475,
-      0.0031731529073004694,
-      0.0012302669993318194
-     ]
-    },
-    "c3c1": {
-     "N_star": 6,
-     "value": 1.6174453340768689,
-     "delta": 0.01430358345589755,
-     "differences": [
-      0.25721217550804576,
-      0.16542543496954876,
-      0.09771868698552333,
-      0.05424229175066242,
-      0.028543161407255102,
-      0.01430358345589755
-     ]
-    }
-   }
+   ]
   },
   "0.10": {
    "U": 0.1,
@@ -1839,48 +1675,7 @@
     0.9230854104482427,
     1.0,
     1.0
-   ],
-   "optimal_truncation_maxdeg5": {
-    "c1": {
-     "N_star": 6,
-     "value": 0.9305729191875309,
-     "delta": 0.00016883405641321403,
-     "differences": [
-      0.0928408012119154,
-      0.02093303074668007,
-      0.005643633310036034,
-      0.0016834808591617012,
-      0.000529827918121617,
-      0.00016883405641321403
-     ]
-    },
-    "fano": {
-     "N_star": 6,
-     "value": 1.2400741110677442,
-     "delta": 0.004526431162702238,
-     "differences": [
-      0.10496460704184929,
-      0.06617800745535352,
-      0.03634428761461361,
-      0.018730954054829274,
-      0.009329823738399856,
-      0.004526431162702238
-     ]
-    },
-    "c3c1": {
-     "N_star": 6,
-     "value": 2.013396926268265,
-     "delta": 0.05272041566178087,
-     "differences": [
-      0.3148938211255584,
-      0.2498546422946386,
-      0.18405886003757455,
-      0.12776250900184816,
-      0.0841066781469284,
-      0.05272041566178087
-     ]
-    }
-   }
+   ]
   }
  }
 }

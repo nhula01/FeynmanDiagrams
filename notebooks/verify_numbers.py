@@ -84,21 +84,18 @@ def table5():
 def kerr():
     S = "Sec. V.A / Fig. 5"
     T = J("benchmarks", "truncation", "truncation_results.json")["kerr_cavity"]["results"]
-    check(S, "U=0.05: delta (successive difference) at N*=16", 1.6e-11, T["0.05"]["delta"], rel=0.05)
-    check(S, "U=0.05: true error at N*=16", 4.3e-12, T["0.05"]["true_error"], rel=0.05)
-    check(S, "U=0.10: delta at N*=16", 1.0e-6, T["0.10"]["delta"], rel=0.05)
-    check(S, "U=0.10: true error at N*=16", 1.8e-7, T["0.10"]["true_error"], rel=0.05)
-    check(S, "U=0.20: N*", 8, T["0.20"]["N_star"], tol=0)
-    check(S, "U=0.20: delta", 0.041, T["0.20"]["delta"], digits=3)
-    check(S, "U=0.20: true error at N*", 0.061, T["0.20"]["true_error"], digits=3)
-    check(S, "U=0.20: true optimum order", 9, T["0.20"]["N_true_optimum"], tol=0)
-    check(S, "U=0.20: minimum error (at N=9)", 0.019, min(T["0.20"]["true_error_all_orders"]), digits=3)
-    check(S, "U=0.20: minimum relative error, 1.3%", 1.3, 100 * min(T["0.20"]["true_error_all_orders"]) / T["0.20"]["exact"], digits=1)
-    check(S, "U=0.30: N*", 2, T["0.30"]["N_star"], tol=0)
-    check(S, "U=0.30: delta", 0.25, T["0.30"]["delta"], digits=2)
-    check(S, "U=0.30: true error at N*", 1.08, T["0.30"]["true_error"], digits=2)
-    check(S, "U=0.30: minimum error", 0.16, min(T["0.30"]["true_error_all_orders"]), digits=2)
-    check(S, "U=0.30: order of minimum error", 5, int(np.argmin(T["0.30"]["true_error_all_orders"])), tol=0)
+    E = lambda U: T[U]["error_all_orders"]
+    check(S, "U=0.05: error at N=16, 4e-12", 4e-12, E("0.05")[16], rel=0.15)
+    check(S, "U=0.10: error at N=16, 2e-7", 2e-7, E("0.10")[16], rel=0.15)
+    check(S, "U=0.05, 0.10: error still decreasing at N=16", 1, int(E("0.05")[16] < E("0.05")[15] and E("0.10")[16] < E("0.10")[15]), tol=0)
+    check(S, "U=0.20: error at N=8, 0.061", 0.061, E("0.20")[8], digits=3)
+    check(S, "U=0.20: error at N=16, 0.37", 0.37, E("0.20")[16], digits=2)
+    check(S, "U=0.20: minimum error (at N=9)", 0.019, min(E("0.20")), digits=3)
+    check(S, "U=0.20: order of minimum error", 9, int(np.argmin(E("0.20"))), tol=0)
+    check(S, "U=0.20: minimum relative error, 1.3%", 1.3, 100 * min(E("0.20")) / T["0.20"]["exact"], digits=1)
+    check(S, "U=0.30: minimum error", 0.16, min(E("0.30")), digits=2)
+    check(S, "U=0.30: order of minimum error", 5, int(np.argmin(E("0.30"))), tol=0)
+    check(S, "reported order of the stored series (N=16)", 16, T["0.20"]["N"], tol=0)
     check(S, "U=0.20: exact <a^dag a>", 1.485, T["0.20"]["exact"], digits=3)
     check(S, "U=0.30: exact <a^dag a>", 2.43, T["0.30"]["exact"], digits=2)
     nfile = os.path.join(CODE, "engines", "numbers.json")
@@ -137,25 +134,21 @@ def ring():
     check(S, "U=0.15: n_0 through second order", 0.3019, r15["n"]["partial_sums"][2], digits=4)
     check(S, "U=0.15: g2 through second order", 1.140, r15["g2"]["partial_sums"][2], digits=3)
     check(S, "U=0.15: g2 through fourth order", 1.150, r15["g2"]["partial_sums"][4], digits=3)
-    check(S, "U=0.15: g2 N*", 8, r15["g2"]["N_star"], tol=0)
-    check(S, "U=0.15: g2 optimally truncated", 1.1509, r15["g2"]["value"], digits=4)
-    check(S, "U=0.15: g2 delta, 1e-5", 1e-5, r15["g2"]["delta"], rel=0.5)
-    check(S, "U=0.15: g2 true error, 5e-5", 5e-5, r15["g2"]["true_error"], rel=0.2)
-    # delta versus true error
-    def ratio(U, obs): r = R[U][obs]; return r["true_error"] / r["delta"]
-    worst_weak = max(ratio(U, "g2") for U in ("0.025", "0.050", "0.075", "0.100", "0.125"))
-    check(S, "g2 error bars of Fig. 8(a): true/delta <= 2 for U<=0.125 (max)", 2, worst_weak, tol=2 - worst_weak if worst_weak <= 2 else -1)
-    g3w = {U: ratio(U, "g3") for U in ("0.025", "0.050", "0.075", "0.100", "0.125")}
-    rows.append((S, "NOTE g3 true/delta at U<=0.125: " + ", ".join(f"U={U}: {v:.1f}" for U, v in g3w.items()) + " (the factor-two statement holds for g2; for g3 it fails at U=0.125)", "", max(g3w.values()), None))
-    check(S, "U=0.15: true/delta on g2, factor 4", 4, ratio("0.150", "g2"), digits=0)
-    check(S, "U=0.30: true/delta on g2, factor 12", 12, ratio("0.300", "g2"), digits=0)
-    check(S, "U=0.30: true/delta on g3, factor 27", 27, ratio("0.300", "g3"), digits=0)
-    mx = max(ratio(U, o) for U in ("0.150", "0.175", "0.200", "0.225", "0.250", "0.275", "0.300") for o in ("g2", "g3"))
-    mn = min(ratio(U, o) for U in ("0.150", "0.175", "0.200", "0.225", "0.250", "0.275", "0.300") for o in ("g2", "g3"))
-    check(S, "underestimate by 4 to 27 for U>=0.15: min", 4, mn, digits=0)
-    check(S, "underestimate by 4 to 27 for U>=0.15: max", 27, mx, digits=0)
+    check(S, "U=0.15: g2 through tenth order, 1.15089", 1.15089, r15["g2"]["partial_sums"][10], digits=5)
+    check(S, "U=0.15: exact g2, 1.15087", 1.15087, r15["g2"]["exact"], digits=5)
+    check(S, "U=0.15: tenth-order g2 error, 1.7e-5", 1.7e-5, r15["g2"]["error"], rel=0.03)
+    check(S, "reported order of the ring series (N=10)", 10, r15["g2"]["N"], tol=0)
+    check(S, "U=0.10: tenth-order g2 error, 2e-7", 2e-7, R["0.100"]["g2"]["error"], rel=0.25)
+    check(S, "U=0.30: tenth-order g2 error, 4e-3", 4e-3, R["0.300"]["g2"]["error"], rel=0.1)
+    check(S, "U=0.30: fourth-order g2 error, 1e-3 (smaller than tenth)", 1e-3, R["0.300"]["g2"]["error_all_orders"][4], rel=0.1)
+    best_order = lambda U, o: int(np.argmin(R[U][o]["error_all_orders"][1:])) + 1
+    low_g2 = [U for U in R if float(U) >= 0.2 and best_order(U, "g2") < 10]
+    check(S, "g2: a lower order beats the tenth at some U>=0.2 (e.g. 0.2, 0.225, 0.3)", 1, int("0.200" in low_g2 and "0.300" in low_g2), tol=0)
+    low_g3 = sorted(float(U) for U in R if best_order(U, "g3") < 10 and float(U) >= 0.1)
+    check(S, "g3: a lower order beats the tenth from U=0.175 (first U>=0.1)", 0.175, min(low_g3), tol=0)
+    check(S, "g3: ... and at every U>=0.175", 1, int(all(best_order(U, "g3") < 10 for U in R if float(U) >= 0.175)), tol=0)
     # timings and scaling (pass 3, single core at fixed load)
-    P = J("benchmarks", "truncation", "summary_numbers.json")["timing_pass3"]
+    P = J("benchmarks", "truncation", "timing_results.json")["passes"]["pass3"]
     F = T["timing_fits"]
     check(S, "exact steady state, 5 levels: growth per site (45)", 45, F["pass3:exact_levels5"]["per_site_factor"], digits=0)
     check(S, "exact steady state, 5 levels, K=4: 328 s", 328, P["exact_levels5"]["t"][P["exact_levels5"]["K"].index(4)], digits=0)
@@ -212,26 +205,29 @@ def closures():
     check(S, "U=0.1: diagrams-4 g3 error / best closure, 5.5", 5.5, tab[0.1]["diagrams4"]["err_g3"] / best(0.1), digits=1)
     check(S, "U=0.3: diagrams-4 g3 error / best closure, 1.25", 1.25, tab[0.3]["diagrams4"]["err_g3"] / best(0.3), digits=2)
 
-    O = C["optimal_truncation_diagrams"]["results"]
-    check(S, "optimal truncation: N* in 8..10 (min)", 8, min(O[U]["g3"]["N_star"] for U in O if float(U) > 0), tol=0)
-    check(S, "optimal truncation: N* in 8..10 (max)", 10, max(O[U]["g3"]["N_star"] for U in O if float(U) > 0), tol=0)
-    check(S, "U=0.10: optimally truncated g3 error 1.8e-6", 1.8e-6, O["0.100"]["g3"]["err_vs_converged_exact"], rel=0.06)
-    check(S, "U=0.15: optimally truncated g3 error 3.2e-4", 3.2e-4, O["0.150"]["g3"]["err_vs_converged_exact"], rel=0.05)
-    check(S, "U=0.20: optimally truncated g3 error 4.9e-3", 4.9e-3, O["0.200"]["g3"]["err_vs_converged_exact"], rel=0.05)
-    check(S, "U=0.10: better than best closure by 100", 100, O["0.100"]["g3"]["best_closure_err_over_optimal_diagram_err"], rel=0.05)
-    check(S, "U=0.15: better than best closure by 5.5", 5.5, O["0.150"]["g3"]["best_closure_err_over_optimal_diagram_err"], digits=1)
-    check(S, "U=0.20: better than best closure by 1.7", 1.7, O["0.200"]["g3"]["best_closure_err_over_optimal_diagram_err"], digits=1)
-    check(S, "U=0.225: break-even (ratio ~1)", 1.0, O["0.225"]["g3"]["best_closure_err_over_optimal_diagram_err"], tol=0.15)
-    check(S, "U=0.25: worse than best closure by 1.6", 1.6, 1 / O["0.250"]["g3"]["best_closure_err_over_optimal_diagram_err"], digits=1)
-    check(S, "U=0.30: worse than best closure by 5.7", 5.7, 1 / O["0.300"]["g3"]["best_closure_err_over_optimal_diagram_err"], digits=1)
+    O = C["diagrams_order10"]["results"]
+    for U, p in (("0.100", 1.8e-6), ("0.150", 1.6e-4), ("0.200", 3.0e-3), ("0.250", 1.9e-2), ("0.300", 5.1e-2)):
+        check(S, f"U={U}: tenth-order g3 relative error {p:.1e}", p, O[U]["g3"]["err"], rel=0.05)
+    for U, p, dg in (("0.100", 103, 0), ("0.150", 11, 0), ("0.200", 2.8, 1), ("0.225", 1.8, 1), ("0.250", 1.05, 2)):
+        check(S, f"U={U}: tenth order better than best closure on g3 by {p}", p, O[U]["g3"]["best_closure_err_over_diagram_err"], digits=dg)
+    for U, p in (("0.275", 1.75), ("0.300", 2.8)):
+        check(S, f"U={U}: tenth order worse than best closure on g3 by {p}", p, 1 / O[U]["g3"]["best_closure_err_over_diagram_err"], digits=2 if p == 1.75 else 1)
     # qualifiers of the 'most accurate' claim: observable, range, cost
-    g2win = [float(U) for U in O if float(U) > 0 and O[U]["g2"]["best_closure_err_over_optimal_diagram_err"] > 1]
-    check(S, "optimal diagrams ahead of the best closure on g2 only up to U=0.125", 0.125, max(g2win), tol=0)
-    g3win = [float(U) for U in O if float(U) > 0 and O[U]["g3"]["best_closure_err_over_optimal_diagram_err"] > 1]
-    check(S, "optimal diagrams ahead of the best closure on g3 up to U=0.225 (claim: U<=0.2)", 0.225, max(g3win), tol=0)
-    Tn = J("benchmarks", "truncation", "truncation_results.json")["ring_K3"]["results"]
-    nwin = [float(U) for U in Tn if float(U) > 0 and min(C["results"][U]["closure3"]["err_n"], C["results"][U]["closure4"]["err_n"]) > Tn[U]["n"]["true_error"] / Tn[U]["n"]["exact"]]
-    check(S, "optimal diagrams ahead of the best closure on n only up to U=0.075", 0.075, max(nwin), tol=0)
+    def ahead_up_to(q):
+        Us = sorted(float(U) for U in O if float(U) > 0.05); last = None
+        for u in Us:
+            if O[f"{u:.3f}"][q]["best_closure_err_over_diagram_err"] > 1: last = u
+            else: break
+        return last
+    check(S, "tenth order ahead of the best closure on g3 up to U=0.25 (abstract, intro, Sec. VI.B)", 0.25, ahead_up_to("g3"), tol=0)
+    check(S, "tenth order ahead of the fourth-order closure on g2 only up to U=0.125", 0.125, ahead_up_to("g2"), tol=0)
+    check(S, "tenth order ahead of the fourth-order closure on n only up to U=0.1", 0.1, ahead_up_to("n"), tol=0)
+    check(S, "U=0.125: tenth order ahead on g2 by 2.8", 2.8, O["0.125"]["g2"]["best_closure_err_over_diagram_err"], digits=1)
+    check(S, "U=0.15: closure-4 ahead on g2 by 1.06", 1.06, 1 / O["0.150"]["g2"]["best_closure_err_over_diagram_err"], digits=2)
+    check(S, "U=0.2: closure-4 ahead on g2 by 22", 22, 1 / O["0.200"]["g2"]["best_closure_err_over_diagram_err"], digits=0)
+    nf = [1 / O[U]["n"]["best_closure_err_over_diagram_err"] for U in ("0.150", "0.175", "0.200", "0.225", "0.250")]
+    check(S, "U=0.15-0.25: closure ahead on n by 6 to 16 (min)", 6, min(nf), digits=0)
+    check(S, "U=0.15-0.25: closure ahead on n by 6 to 16 (max)", 16, max(nf), digits=0)
     raw = J("benchmarks", "truncation", "exact_pool_raw.json")
     tser = [dt for k, v, dt in raw if k[0] == "series" and 0 < k[1] <= 0.3]
     check(S, "orders 0-10 of n, n2, n3 at K=3, symbolic recursion: 54 s per coupling (median of the raw runs)", 54, float(np.median(tser)), tol=3)
@@ -255,15 +251,14 @@ def closures():
     _, cnt = Rr.coefficients(MM.mul(MM.mul(MM.mul(bd, bd), bd), MM.mul(MM.mul(b, b), b)), 6, return_counts=True)
     check(S, "labels after vertices 0-6 for n3 at Nmax=6: 136, 408, 691, 312, 72, 10, 1", 0, 0 if cnt == [136, 408, 691, 312, 72, 10, 1] else 1, tol=0)
     # all plotted correlators lie above one
-    allg = [tab[U][k][g] for U in tab for k in ("closure2", "closure3", "closure4", "diagrams2", "diagrams4") for g in ("g2", "g3")]
+    allg = [tab[U][k][g] for U in tab for k in ("closure2", "closure3", "closure4", "diagrams2", "diagrams4", "diagrams10") for g in ("g2", "g3")]
     check(S, "no plotted correlator below one (min g2, g3)", 1.0, min(allg), tol=min(allg) - 1.0 if min(allg) >= 1 else -1)
 
 def table_SI():
     S = "SM Table SI"
     sm = paper_table("tab:closures")
     body = sm[sm.index("\\label{tab:closures}"):]; body = body[:body.index("\\end{tabular}")]
-    C = J("benchmarks", "cumulant_closures", "cumulant_closure_results.json"); R = C["results"]; O = C["optimal_truncation_diagrams"]["results"]
-    T = J("benchmarks", "truncation", "truncation_results.json")["ring_K3"]["results"]
+    C = J("benchmarks", "cumulant_closures", "cumulant_closure_results.json"); R = C["results"]; O = C["diagrams_order10"]["results"]
     def f(x):
         m, e = f"{x:.1e}".split("e"); return f"{m}({int(e)})"
     U = None; n = 0
@@ -272,12 +267,31 @@ def table_SI():
         if not m: continue
         U = m.group(1) or U; obs = {"g^{(3)}": "g3", "g^{(2)}": "g2", "n": "n"}[m.group(2)]
         cells = [c.strip().strip("$") for c in m.group(3).split("&")]
-        r = R[f"{float(U):.3f}"]; o = O[f"{float(U):.3f}"]; t = T[f"{float(U):.3f}"]
+        r = R[f"{float(U):.3f}"]; o = O[f"{float(U):.3f}"]
         exp = [f"{r['exact'][obs]:.6f}"] + [f(r[k][f"err_{obs}"]) for k in ("closure2", "closure3", "closure4", "diagrams2", "diagrams4")]
-        exp.append(f(o[obs]["err_vs_converged_exact"]) if obs != "n" else f(t["n"]["true_error"] / t["n"]["exact"]))
-        ok = all(c == e or (c == "1.05(-1)" and e in ("1.0(-1)", "1.1(-1)")) for c, e in zip(cells, exp)); n += 1
+        exp.append(f(o[obs]["err"]))
+        ok = len(cells) == len(exp) and all(c == e for c, e in zip(cells, exp)); n += 1
         rows.append((S, f"U={U} {obs}: {' '.join(cells)}", " ".join(cells), " ".join(exp), ok))
     rows.append((S, "rows checked", 15, n, n == 15))
+
+# ----------------------------------------------------------------------------- Sec. VII  Table V prose
+def table5_prose():
+    S = "Sec. VII / Table V text"
+    T = J("benchmarks", "truncation", "truncation_results.json")["table5"]
+    T5 = J("benchmarks", "truncation", "table5_corrected.json")
+    k1 = lambda U: T["K1"][U]["diagrams_maxdeg18_fullRS_r0.1"]
+    check(S, "K=1, U=0.05: eighth-order Fano error 8e-6", 8e-6, k1("0.05")["fano"]["error"], rel=0.1)
+    check(S, "K=1, U=0.05: eighth-order c3/c1 error 1.5e-4", 1.5e-4, k1("0.05")["c3c1"]["error"], rel=0.05)
+    ex = T5["K1"]["0.10"]["exact"]["c3c1"]
+    check(S, "K=1, U=0.10: Gaussian error on c3/c1, 25%", 25, 100 * abs(T5["K1"]["0.10"]["gaussian_contour"]["c3c1"] - ex) / ex, digits=0)
+    check(S, "K=1, U=0.10: eighth-order error on c3/c1, 7%", 7, 100 * k1("0.10")["c3c1"]["error"] / ex, digits=0)
+    k3 = T["K3"]["0.05"]
+    check(S, "K=3: c3/c1 error at N<=3, 0.087", 0.087, k3["diagrams_N3_maxdeg5_fullRS_r0.1"]["c3c1"]["error"], digits=3)
+    check(S, "K=3: c3/c1 error at N<=4, 0.040", 0.040, k3["diagrams_N4_maxdeg6_fullRS_r0.1"]["c3c1"]["error"], digits=3)
+    check(S, "K=3: c3/c1 error at N<=6, 7e-3", 7e-3, k3["diagrams_N6_maxdeg8_fullRS_r0.1"]["c3c1"]["error"], digits=3)
+    check(S, "K=3: Fano error at N<=6, 3.4e-4", 3.4e-4, k3["diagrams_N6_maxdeg8_fullRS_r0.1"]["fano"]["error"], digits=5)
+    e = k3["diagrams_N6_maxdeg8_fullRS_r0.1"]["c3c1"]["error_all_orders"]
+    check(S, "K=3: c3/c1 error falls through every order computed", 1, int(all(b < a for a, b in zip(e, e[1:]))), tol=0)
 
 # ----------------------------------------------------------------------------- Sec. VII  counting statistics
 def fcs():
@@ -297,12 +311,8 @@ def fcs():
     rat = [(d(U, "c3c1")["value"] - g(U)[2]) / (d(U, "fano")["value"] - g(U)[1]) for U in (0.02, 0.04, 0.06, 0.08, 0.1)]
     check(S, "non-Gaussian part: c3/c1 vs Fano ratio, min 17", 17, min(rat), digits=0)
     check(S, "non-Gaussian part: c3/c1 vs Fano ratio, max 'forty' (code gives 38)", 40, max(rat), tol=2.5)
-    check(S, "U=0.08: delta on Fano, 0.0012", 0.0012, d(0.08, "fano")["delta"], digits=4)
-    check(S, "U=0.08: delta on c3/c1, 0.014", 0.014, d(0.08, "c3c1")["delta"], digits=3)
-    check(S, "U=0.10: delta on Fano, 0.0045", 0.0045, d(0.1, "fano")["delta"], digits=4)
-    check(S, "U=0.10: delta on c3/c1, 0.053", 0.053, d(0.1, "c3c1")["delta"], digits=3)
-    check(S, "N* = 6 of six orders (all cumulants, U=0.1)", 6, min(d(0.1, q)["N_star"] for q in ("c1", "fano", "c3c1")), tol=0)
-    inc = d(0.1, "c3c1")["differences"]
+    check(S, "chain: reported order N=6 (highest computed), all cumulants", 6, min(d(0.1, q)["N"] for q in ("c1", "fano", "c3c1")), tol=0)
+    inc = np.abs(np.diff(d(0.1, "c3c1")["partial_sums"]))
     check(S, "U=0.1: c3/c1 increments shrink by ~0.65 per order", 0.65, inc[-1] / inc[-2], digits=1)
     tail = inc[-1] * (inc[-1] / inc[-2]) / (1 - inc[-1] / inc[-2])
     check(S, "U=0.1: geometric tail of c3/c1, about 0.1", 0.1, tail, tol=0.02)
@@ -317,6 +327,7 @@ def fcs():
     check(S, "U=0.1 trajectories: c2/c1 = 1.2363(49)", 1.2363, e[1], digits=4); check(S, "   se = 0.0049", 0.0049, s[1], digits=4)
     check(S, "U=0.1 trajectories: c3/c1 = 2.054(49)", 2.054, e[2], digits=3); check(S, "   se = 0.049", 0.049, s[2], digits=3)
     ref = R["0.10"]["comparison"]["references"]
+    check(S, "U=0.1 diagrams N<=6 = chain8 sixth-order partial sum (c3/c1)", 0, abs(ref["diagrams_N6"]["value"][2] - d(0.1, "c3c1")["partial_sums"][6]), tol=5e-4)
     check(S, "U=0.1 diagrams N<=6: c1 = 0.9306", 0.9306, ref["diagrams_N6"]["value"][0], digits=4)
     check(S, "U=0.1 diagrams N<=6: c2/c1 = 1.2401", 1.2401, ref["diagrams_N6"]["value"][1], digits=4)
     check(S, "U=0.1 diagrams N<=6: c3/c1 = 2.013", 2.013, ref["diagrams_N6"]["value"][2], digits=3)
@@ -344,8 +355,6 @@ def fcs():
     check(S, "U=0.08 diagrams within 1.5 s.e. (max |z|)", 1.5, max(abs(z) for z in ref8["diagrams_N6"]["z"]), digits=1)
     check(S, "U=0.08 Gaussian: c3/c1 = 1.499", 1.499, ref8["gaussian"]["value"][2], digits=3)
     check(S, "U=0.08 Gaussian low by 1.9 s.e. on c3/c1", 1.9, ref8["gaussian"]["z"][2], digits=1)
-    check(S, "U=0.08: delta on c2/c1 quoted as (12)", 0.0012, d(0.08, "fano")["delta"], digits=4)
-    check(S, "U=0.08: delta on c3/c1 quoted as (14)", 0.014, d(0.08, "c3c1")["delta"], digits=3)
     e4, s4, ref4 = R["0.04"]["estimate"], R["0.04"]["se"], R["0.04"]["comparison"]["references"]
     check(S, "U=0.04 trajectories: c1 = 0.8507(9)", 0.8507, e4[0], digits=4)
     check(S, "U=0.04 trajectories: c2/c1 = 1.0635(71)", 1.0635, e4[1], digits=4)
@@ -405,7 +414,7 @@ def sm_figures():
 def main():
     out = None
     if "--report" in sys.argv: out = sys.argv[sys.argv.index("--report") + 1]
-    table5(); table_SI(); kerr(); ring(); closures(); fcs(); sm_figures()
+    table5(); table_SI(); kerr(); ring(); closures(); table5_prose(); fcs(); sm_figures()
     npass = sum(1 for r in rows if r[4] is True); nfail = sum(1 for r in rows if r[4] is False); nskip = sum(1 for r in rows if r[4] is None)
     lines = ["| section | quantity | paper | code | ok |", "|---|---|---|---|---|"]
     fmt = lambda v: "" if v is None else (f"{v:.6g}" if isinstance(v, float) else str(v))

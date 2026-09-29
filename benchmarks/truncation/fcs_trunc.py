@@ -1,10 +1,10 @@
-"""Table V and the eight-site chain: counting cumulants order by order, optimal truncation.
+"""Table V and the eight-site chain: counting cumulants order by order.
 usage: fcs_trunc.py [k1|k3|chain8|chain8check]"""
 import sys, json, os, time, numpy as np
 _ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))  # the code/ directory
 sys.path.insert(0, os.path.join(_ROOT, 'engines'))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from truncation import truncation_record
+from series import series_record
 RP = json.load(open(os.path.join(_ROOT, 'notebook', 'data', 'revision_params.json')))
 what = sys.argv[1]
 H = 0.05                                   # finite-difference step in chi (same as the paper)
@@ -20,8 +20,8 @@ def cumulant_partial_sums(theta_table):
 
 def records(c1, f, c3, exact=None, **extra):
     ex = exact or {}
-    return dict(c1=truncation_record(c1, exact=ex.get("c1")), fano=truncation_record(f, exact=ex.get("fano")),
-                c3c1=truncation_record(c3, exact=ex.get("c3c1")), **extra)
+    return dict(c1=series_record(c1, exact=ex.get("c1")), fano=series_record(f, exact=ex.get("fano")),
+                c3c1=series_record(c3, exact=ex.get("c3c1")), **extra)
 
 if what == "k1":
     from fcs import theta_series
@@ -44,7 +44,7 @@ if what == "k1":
                       maxdeg_change_at_Nmax=dict(c1=abs(c1[-1]-c1b[-1]), fano=abs(f[-1]-fb[-1]), c3c1=abs(c3[-1]-c3b[-1])))
         out["results"][f"{U:.2f}"] = rec
         for k in ("c1", "fano", "c3c1"):
-            r = rec[k]; print(f"K=1 U={U} {k}: N*={r['N_star']} {r['value']:.5f}+-{r['delta']:.1e} true {r['true_error']:.1e} exact {r['exact']:.5f}  S_N={np.round(r['partial_sums'],5)}", flush=True)
+            r = rec[k]; print(f"K=1 U={U} {k}: N={r['N']} {r['value']:.5f} err {r['error']:.1e} exact {r['exact']:.5f}  S_N={np.round(r['partial_sums'],5)}", flush=True)
         print(f"  [{time.time()-t:.0f}s]", flush=True)
     json.dump(out, open('fcs_k1_truncation.json', 'w'), indent=1)
 
@@ -67,7 +67,7 @@ elif what == "k3":
     out["results"][f"maxdeg{MAXDEG}"] = records(c1, f, c3, exact=exact, maxdeg=MAXDEG, Nmax=Nmax, time=time.time()-t)
     for k in ("c1", "fano", "c3c1"):
         r = out["results"][f"maxdeg{MAXDEG}"][k]
-        print(f"K=3 maxdeg={MAXDEG} {k}: N*={r['N_star']} {r['value']:.5f}+-{r['delta']:.1e} true {r['true_error']:.1e} exact {r['exact']:.5f}  S_N={np.round(r['partial_sums'],5)}", flush=True)
+        print(f"K=3 maxdeg={MAXDEG} {k}: N={r['N']} {r['value']:.5f} err {r['error']:.1e} exact {r['exact']:.5f}  S_N={np.round(r['partial_sums'],5)}", flush=True)
     print(f"  [{time.time()-t:.0f}s]", flush=True)
     # (ii) the paper's convention: order N with maxdeg N+2  (values at the final order only)
     paper = {}
@@ -95,6 +95,6 @@ elif what in ("chain8", "chain8check"):
         out["results"][f"{U:.2f}"] = records(c1, f, c3, U=U, time=time.time()-t)
         for k in ("c1", "fano", "c3c1"):
             r = out["results"][f"{U:.2f}"][k]
-            print(f"K=8 U={U} maxdeg={MAXDEG} {k}: N*={r['N_star']} {r['value']:.5f}+-{r['delta']:.1e}  S_N={np.round(r['partial_sums'],5)}", flush=True)
+            print(f"K=8 U={U} maxdeg={MAXDEG} {k}: N={r['N']} {r['value']:.5f}  S_N={np.round(r['partial_sums'],5)}", flush=True)
         print(f"  [{time.time()-t:.0f}s]", flush=True)
         json.dump(out, open(f'fcs_chain8_maxdeg{MAXDEG}_N{Nmax}.json', 'w'), indent=1)

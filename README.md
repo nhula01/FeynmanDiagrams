@@ -11,7 +11,7 @@ from mean field to non-Gaussian photon correlations" (P. Ehlers, P. H. Nguyen, D
     notebook/                  the original companion notebook, its cached exact data (data/) and its output figures
     benchmarks/
       cumulant_closures/       Fig. 9: cumulant closures of order 2-4 against the displaced-frame exact reference
-      truncation/              Figs. 5 and 8, Table V: optimal truncation, contour cumulants, runtimes, label counts
+      truncation/              Figs. 5 and 8, Table V: fixed-order partial sums, contour cumulants, runtimes, label counts
       trajectories/            Fig. 10: quantum-jump counting statistics of the eight-site chain
         configs/               production and validation run configurations
         est/                   counting-cumulant estimates computed from the jump records
@@ -97,7 +97,7 @@ scripts, the raw outputs, and the result files from which the figures and tables
     cumulant_closures/   run_cumulants.py, exact_disp.py, diag_run.py  ->  assemble.py  ->  make_fig_g3.py
                          raw inputs diag_U*.json, exactD_U*.json, closure_partial.json, closure_timing_1core.json;
                          result cumulant_closure_results.json
-    truncation/          kerr_trunc.py, exact_pool.py, exact_disp_pool.py, fcs_nz.py, fcs_nz_md.py, k1_radius.py,
+    truncation/          series.py, kerr_trunc.py, exact_pool.py, exact_disp_pool.py, fcs_nz.py, fcs_nz_md.py, k1_radius.py,
                          table5_contour.py, label_counts.py, timing_v2.py, timing_v3.py, sparse_ring_timing.py
                          (raw outputs *_raw*.json, timing*_*.json, pass3/)
                          ->  assemble_truncation.py  (writes truncation_results.json, table5_corrected.json,

@@ -8,7 +8,7 @@ sys.path.insert(0, os.path.join(_ROOT, 'engines'))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import tensor_engine as TE
 from fcs_multi import TiltedChain
-from truncation import truncation_record
+from series import series_record
 RP = json.load(open(os.path.join(_ROOT, 'notebook', 'data', 'revision_params.json')))
 H = 0.05; CHIS = [-2*H, -H, 0.0, H, 2*H]
 NPROC = int(sys.argv[1]) if len(sys.argv) > 1 else 4

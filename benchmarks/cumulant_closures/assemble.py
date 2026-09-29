@@ -140,25 +140,28 @@ for row in tab:
           + f" | best {row['best_closure']} ratio {row.get('ratio_best_closure_err_over_diag4_err')}")
 print('validation max diffs', out['validation']['second_order_max_abs_diff'], out['validation']['small_U_0_02'])
 
-# optimally truncated diagrams from the truncation track, re-scored against the converged exact reference
-ebf = os.path.join(HERE, '..', 'truncation', 'fig_g3_errorbars.json')
-if os.path.exists(ebf):
-    E = json.load(open(ebf)); ot = {}
-    for i, u in enumerate(E['U']):
-        k = f"{u:.3f}"
-        if k not in res: continue
-        ex = res[k]['exact']; rec = dict(U=u)
-        for q in ('g2', 'g3'):
-            v, d = E[q][i], E[q+'_delta'][i]; err = abs(v/ex[q]-1)
-            best = min(res[k][m]['err_'+q] for m in ('closure2', 'closure3', 'closure4'))
-            rec[q] = dict(value=v, delta=d, N_star=E[q+'_Nstar'][i], their_exact=E[q+'_exact'][i], err_vs_converged_exact=err,
-                          true_abs_error_over_delta=(abs(v-ex[q])/d if d > 0 else None), best_closure_err=best,
-                          best_closure_err_over_optimal_diagram_err=(best/err if err > 0 else None),
-                          their_exact_rel_diff_from_converged=abs(E[q+'_exact'][i]/ex[q]-1))
-        ot[k] = rec
-    out['optimal_truncation_diagrams'] = dict(source='../truncation/fig_g3_errorbars.json', results=ot)
-    for k, rec in ot.items():
-        print('opt', k, 'g3 err %.2e delta_rel %.2e true/delta %.1f bestclosure/opt %.2f' % (rec['g3']['err_vs_converged_exact'], rec['g3']['delta']/res[k]['exact']['g3'],
-              rec['g3']['true_abs_error_over_delta'] or 0, rec['g3']['best_closure_err_over_optimal_diagram_err'] or 0),
-              '| g2 err %.2e bestclosure/opt %.2f' % (rec['g2']['err_vs_converged_exact'], rec['g2']['best_closure_err_over_optimal_diagram_err'] or 0))
+# diagrams through tenth order (momentum engine, orders 0..10, ../truncation/truncation_results.json), scored against the
+# converged exact reference used for the closures
+trf = os.path.join(HERE, '..', 'truncation', 'truncation_results.json')
+if os.path.exists(trf):
+    RS = json.load(open(trf))['ring_K3']['results']; d10 = {}
+    for k in res:
+        if k not in RS or float(k) == 0: continue
+        ex = res[k]['exact']; rec = dict(U=float(k), N=10)
+        for q, qq in (('n', 'n'), ('g2', 'g2'), ('g3', 'g3')):
+            v = RS[k][qq]['partial_sums'][10]; err = abs(v/ex[q]-1)
+            best_m = min(('closure2', 'closure3', 'closure4'), key=lambda m: res[k][m]['err_'+q])
+            best = res[k][best_m]['err_'+q]
+            rec[q] = dict(value=v, err=err, best_closure=best_m, best_closure_err=best, best_closure_err_over_diagram_err=(best/err if err > 0 else None))
+        d10[k] = rec
+        res[k]['diagrams10'] = dict(n=rec['n']['value'], g2=rec['g2']['value'], g3=rec['g3']['value'],
+                                    err_n=rec['n']['err'], err_g2=rec['g2']['err'], err_g3=rec['g3']['err'])
+    out['diagrams_order10'] = dict(source='../truncation/truncation_results.json (ring_K3, partial sums through N = 10)', results=d10)
+    for row in out['table_fig11']:
+        k = f"{row['U']:.3f}"
+        if k in res and 'diagrams10' in res[k]:
+            r = res[k]['diagrams10']; row['diagrams10'] = dict(g2=r['g2'], g3=r['g3'], err_g2=r['err_g2'], err_g3=r['err_g3'],
+                                                               t=(out.get('diagram_cost') or {}).get('sparse_all_U', {}).get('10'))
+    for k, rec in d10.items():
+        print('N<=10', k, ' '.join(f"{q}: err {rec[q]['err']:.2e} best closure/diagrams {rec[q]['best_closure_err_over_diagram_err']:.2f}" for q in ('g3', 'g2', 'n')))
 json.dump(out, open(os.path.join(HERE, 'cumulant_closure_results.json'), 'w'), indent=1, default=float)

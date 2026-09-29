@@ -1,12 +1,15 @@
-"""Assemble all truncation-track results into truncation_results.json, timing_results.json, fig_g3_errorbars.json,
-fig_fcs_errorbars.json, table5_corrected.json, table5_fragment.tex; redraw fig_kerr_convergence.pdf and fig_ring.pdf."""
+"""Assemble the series benchmarks into truncation_results.json, timing_results.json, table5_corrected.json,
+table5_fragment.tex; redraw fig_kerr_convergence.pdf and fig_ring.pdf.
+
+Every series is reported at a stated order (the highest order computed unless a lower one is named) with, where an
+exact reference exists, the error of every partial sum.  No order is selected from the series itself."""
 import sys, os, json, glob, math, numpy as np
 _ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))  # the code/ directory
 import matplotlib; matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 sys.path.insert(0, os.path.join(_ROOT, 'engines'))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from truncation import truncation_record, optimal_truncation
+from series import series_record
 plt.rcParams.update({"font.family": "serif", "mathtext.fontset": "cm", "font.size": 8, "axes.labelsize": 8, "legend.fontsize": 6.5,
     "xtick.labelsize": 7, "ytick.labelsize": 7, "axes.linewidth": 0.6, "lines.linewidth": 1.0, "xtick.direction": "in",
     "ytick.direction": "in", "xtick.top": True, "ytick.right": True, "legend.frameon": False})
@@ -15,9 +18,8 @@ ORDER_COLORS = ["#d95f02", "#1b9e77", "#7570b3", "#e7298a", "#66a61e", "#a6761d"
 J = lambda f: json.load(open(f))
 ex = lambda f: os.path.exists(f)
 RP = J(os.path.join(_ROOT, 'notebook', 'data', 'revision_params.json'))
-RULE = ("N* = argmin_{1<=N<=Nmax} |S_N - S_{N-1}| over the computed orders (the highest order if the differences are still "
-        "decreasing there); value S_{N*}; error estimate delta = |S_{N*} - S_{N*-1}|")
-res = dict(rule=RULE)
+res = dict(convention="each series: partial sums S_0..S_Nmax, the value S_N at the stated order N (the highest computed unless named), "
+                      "and, where an exact reference exists, the error |S_n - exact| of every partial sum")
 # =========================================================== Kerr cavity
 kerr = J('kerr_truncation.json'); res["kerr_cavity"] = kerr
 # =========================================================== ring K=3
@@ -63,8 +65,8 @@ for U in sorted(series):
     s = series[U]; S = {q: np.cumsum(np.array(s[q]["terms_re"]) + 1j*np.array(s[q]["terms_im"])).real for q in ("n", "n2", "n3")}
     g2 = S["n2"]/S["n"]**2; g3 = S["n3"]/S["n"]**3
     for tag, Mx in (("results", 10), ("results_Nmax6", 6)):
-        ring[tag][key] = dict(U=U, n=truncation_record(S["n"][:Mx+1], exact=rec["n0"]), g2=truncation_record(g2[:Mx+1], exact=g2e),
-                              g3=truncation_record(g3[:Mx+1], exact=g3e))
+        ring[tag][key] = dict(U=U, n=series_record(S["n"][:Mx+1], exact=rec["n0"]), g2=series_record(g2[:Mx+1], exact=g2e),
+                              g3=series_record(g3[:Mx+1], exact=g3e))
     ring["labels"][key] = {q: s[q]["labels"] for q in ("n", "n2", "n3")}
 res["ring_K3"] = ring
 # =========================================================== label counts (part C)
@@ -127,7 +129,7 @@ for U in (0.05, 0.10):
         if a[0] != U: continue
         _, md, rs, r, M = a; cn = C(cc)                   # (6, 9): cumulant index, order
         seq = dict(c1=cn[1].real, fano=(cn[2]/cn[1]).real, c3c1=(cn[3]/cn[1]).real)
-        d[f"diagrams_maxdeg{md}_{'fullRS' if rs else 'notebookRS'}_r{r}"] = {q: truncation_record(seq[q], exact=d["exact"][q]) for q in seq}
+        d[f"diagrams_maxdeg{md}_{'fullRS' if rs else 'notebookRS'}_r{r}"] = {q: series_record(seq[q], exact=d["exact"][q]) for q in seq}
     t5["K1"][f"{U:.2f}"] = d
 # K=3 diagrams
 k3pts = {}
@@ -162,26 +164,20 @@ for (N, md, rs, r, M), pts in sorted(groups.items()):
     cn = taylor_half([pts[j] for j in range(M//2+1)], r, M)      # (6, N+1)
     seq = dict(c1=cn[1].real, fano=(cn[2]/cn[1]).real, c3c1=(cn[3]/cn[1]).real)
     exd = d3["exact"] or {}
-    d3[f"diagrams_N{N}_maxdeg{md}_{'fullRS' if rs else 'notebookRS'}_r{r}"] = {q: truncation_record(seq[q], exact=exd.get(q)) for q in seq}
+    d3[f"diagrams_N{N}_maxdeg{md}_{'fullRS' if rs else 'notebookRS'}_r{r}"] = {q: series_record(seq[q], exact=exd.get(q)) for q in seq}
 t5["K3"]["0.05"] = d3
 res["table5"] = t5
 json.dump(t5, open('table5_corrected.json', 'w'), indent=1)
 # LaTeX fragment
-def row(lbl, meth, v, err=None):
-    def fmt(q):
-        return f"${v[q]:.4f}\\pm{err[q]}$" if err is not None else f"${v[q]:.4f}$"
+def row(lbl, meth, v):
+    fmt = lambda q: f"${v[q]:.4f}$"
     return f"{lbl:<24}& {meth:<34}& {fmt('c1')} & {fmt('fano')} & {fmt('c3c1')} \\\\"
-def err_str(rec):
-    out = {}
-    for q in ("c1", "fano", "c3c1"):
-        m, e = f"{rec[q]['delta']:.1e}".split("e"); out[q] = f"{m}\\times10^{{{int(e)}}}"
-    return out
 lines = [r"\begin{tabular}{llccc}", r" & method & $c_1/\kappa$ & $c_2/c_1$ & $c_3/c_1$ \\ \hline"]
 for U in ("0.05", "0.10"):
     d = t5["K1"][U]; lab = f"$K=1$, $U={float(U):.2f}\\kappa$"
-    dg = d["diagrams_maxdeg14_fullRS_r0.1"]; opt = {q: dg[q]["value"] for q in dg}; Ns = {q: dg[q]["N_star"] for q in dg}
+    dg = d["diagrams_maxdeg14_fullRS_r0.1"]; val = {q: dg[q]["value"] for q in dg}; Nd = max(dg[q]["N"] for q in dg)
     lines += [row(lab, "exact", d["exact"]), row("", "mean field", d["mean_field"]), row("", "Gaussian FCS", d["gaussian"]),
-              row("", f"diagrams, $N^*={max(Ns.values())}$", opt, err_str(dg)) + r"[2pt]"]
+              row("", f"diagrams $N\\leq{Nd}$", val) + r"[2pt]"]
 if d3.get("exact"):
     lab = r"$K=3$, $U=0.05\kappa$"; lines += [row(lab, "exact", d3["exact"]), row("", "mean field ($U=0$ displacement)", d3["mean_field_U0_displacement"])]
     for N in (2, 3, 4):
@@ -189,18 +185,15 @@ if d3.get("exact"):
         if k in d3: lines.append(row("", f"diagrams $N\\leq{N}$", {q: d3[k][q]["partial_sums"][-1] for q in ("c1", "fano", "c3c1")}))
     k = "diagrams_N6_maxdeg8_fullRS_r0.1"
     if k in d3:
-        Ns = {q: d3[k][q]["N_star"] for q in ("c1", "fano", "c3c1")}
-        lines.append(row("", f"diagrams, $N^*={','.join(str(Ns[q]) for q in ('c1','fano','c3c1'))}$", {q: d3[k][q]["value"] for q in Ns}, err_str(d3[k])))
+        lines.append(row("", f"diagrams $N\\leq{d3[k]['c1']['N']}$", {q: d3[k][q]["value"] for q in ("c1", "fano", "c3c1")}))
 lines.append(r"\end{tabular}")
 open('table5_fragment.tex', 'w').write("\n".join(lines) + "\n")
 # =========================================================== eight-site chain: from the trajectories track
 TR = os.path.join(_ROOT, 'benchmarks', 'trajectories')
 fcs = dict(description="Disordered eight-site Kerr chain (revision_params.json chain8_fcs), counting on site 0. "
-                       "chain8_contour.json stores the corrected full Rayleigh-Schroedinger diagram series under diagrams_maxdeg5 and the legacy "
-                       "notebook recursion under diagrams_maxdeg5_notebook_recursion; both are assembled here with optimal-truncation error bars. "
-                       "The fcs_nz raw outputs in this directory independently reproduce both series.",
-           instruction="Plot fano and c3c1 versus U with yerr = delta (successive-difference error bar at N*) from fullRS. "
-                       "notebookRS is retained only as a legacy-recursion comparison.",
+                       "chain8_contour.json stores the full Rayleigh-Schroedinger diagram series under diagrams_maxdeg5 and the "
+                       "recursion without the renormalization terms under diagrams_maxdeg5_notebook_recursion; both are assembled here "
+                       "order by order (orders 0..6, reported at N = 6). The fcs_nz raw outputs in this directory independently reproduce both series.",
            source="benchmarks/trajectories/chain8_contour.json", U=[], results={})
 fcs_source = os.path.join(TR, 'chain8_contour.json')
 if ex(fcs_source):
@@ -211,33 +204,19 @@ if ex(fcs_source):
         notebook_rec = rec.get("diagrams_maxdeg5_notebook_recursion", rec["diagrams_maxdeg5"])
         notebook_arr = np.array(notebook_rec["orders"], float)
         out = dict(U=U, gaussian=rec.get("gaussian"), mean_field=rec.get("mean_field"),
-                   fullRS={q: truncation_record(full_arr[:, i]) for i, q in enumerate(("c1", "fano", "c3c1"))},
-                   notebookRS={q: truncation_record(notebook_arr[:, i]) for i, q in enumerate(("c1", "fano", "c3c1"))})
+                   fullRS={q: series_record(full_arr[:, i]) for i, q in enumerate(("c1", "fano", "c3c1"))},
+                   notebookRS={q: series_record(notebook_arr[:, i]) for i, q in enumerate(("c1", "fano", "c3c1"))})
         grp = [(k, v) for k, v in c8g.items() if k[0] == round(U, 3)]
         for (u, N, md, rs, r, M), pts in grp:
             if len(pts) < M//2+1: continue
             cn = taylor_half([pts[j] for j in range(M//2+1)], r, M)
             seq = dict(c1=cn[1].real, fano=(cn[2]/cn[1]).real, c3c1=(cn[3]/cn[1]).real)
-            here = {q: truncation_record(seq[q]) for q in seq}
+            here = {q: series_record(seq[q]) for q in seq}
             tag = "fullRS" if rs else "notebookRS"
             diff = float(max(np.max(np.abs(np.array(here[q]["partial_sums"]) - np.array(out[tag][q]["partial_sums"]))) for q in ("c1", "fano", "c3c1")))
             if diff > 1e-10: raise RuntimeError(f"chain8 {tag} cross-check failed at U={U}: maxdiff={diff}")
         fcs["results"][key] = out
-json.dump(fcs, open('fig_fcs_errorbars.json', 'w'), indent=1)
 res["chain8"] = fcs
-# =========================================================== fig_g3_errorbars.json
-g3 = dict(description="K=3 uniform Kerr ring (Delta=-1, J=0.4, eta=1, kappa=1): optimally truncated diagrammatic g2 and g3 with "
-                      "successive-difference error bars (orders 0..10, momentum engine), exact from sparse time evolution at 7 Fock levels per site.",
-          instruction="Plot value with yerr=delta at each U; N_star gives the order used.  *_Nmax6 fields are the same rule restricted to orders <= 6.",
-          U=[], g2=[], g2_delta=[], g2_Nstar=[], g2_exact=[], g3=[], g3_delta=[], g3_Nstar=[], g3_exact=[], g2_true_error=[], g3_true_error=[],
-          g2_Nmax6=[], g2_delta_Nmax6=[], g2_Nstar_Nmax6=[], g3_Nmax6=[], g3_delta_Nmax6=[], g3_Nstar_Nmax6=[], g2_partial_sums=[], g3_partial_sums=[])
-for key in sorted(ring["results"]):
-    r = ring["results"][key]; r6 = ring["results_Nmax6"][key]; g3["U"].append(r["U"])
-    for q in ("g2", "g3"):
-        g3[q].append(r[q]["value"]); g3[q+"_delta"].append(r[q]["delta"]); g3[q+"_Nstar"].append(r[q]["N_star"]); g3[q+"_exact"].append(r[q]["exact"])
-        g3[q+"_true_error"].append(r[q]["true_error"]); g3[q+"_partial_sums"].append(r[q]["partial_sums"])
-        g3[q+"_Nmax6"].append(r6[q]["value"]); g3[q+"_delta_Nmax6"].append(r6[q]["delta"]); g3[q+"_Nstar_Nmax6"].append(r6[q]["N_star"])
-json.dump(g3, open('fig_g3_errorbars.json', 'w'), indent=1)
 # =========================================================== timing
 def fitexp(Ks, ts):
     p = np.polyfit(np.log(np.array(Ks, float)), np.log(np.array(ts, float)), 1); return float(p[0])
@@ -302,21 +281,13 @@ ax1.plot(Us, mf, color="gray", ls=(0, (4, 2)), lw=1.0, label="mean field ($L=0$)
 pw = Us[:, None]**np.arange(Nmax+1)[None, :]
 for col, N in zip(ORDER_COLORS, [1, 2, 4, 8]):
     ax1.plot(Us, (pw[:, :N+1]*cn[None, :N+1]).sum(1), color=col, lw=0.9, label=f"$N\\leq{N}$")
-Uo, So, Do = [], [], []
-for U in Us[2::4]:
-    v, k, dl, _ = optimal_truncation(np.cumsum(cn*U**np.arange(Nmax+1))); Uo.append(U); So.append(v); Do.append(dl)
-ax1.errorbar(Uo, So, yerr=Do, fmt="o", color="k", mfc="white", ms=3, capsize=1.5, lw=0.7, label="optimal truncation $\\pm\\delta$")
 ax1.set_ylim(0.6, 3.2); ax1.set_xlim(0, Us[-1]); ax1.set_xlabel(r"$U/\kappa$"); ax1.set_ylabel(r"$\langle a^\dagger a\rangle$")
 lg = ax1.legend(ncol=1, loc="upper left", bbox_to_anchor=(0.06, 1.0)); [l.set_linewidth(1.4) for l in lg.get_lines()]
 ax1.text(0.97, 0.05, "(a)", transform=ax1.transAxes, ha="right", va="bottom")
 for col, (key, rec) in zip(["#1b9e77", "#7570b3", "#d95f02", "#e7298a"], sorted(kerr["results"].items())):
-    err = np.array(rec["true_error_all_orders"]); U = rec["U"]
+    err = np.array(rec["error_all_orders"]); U = rec["U"]
     ax2.semilogy(np.arange(Nmax+1), err, "o-", color=col, ms=2.6, lw=0.8, label=f"$U/\\kappa={U}$")
-    ks = rec["N_star"]; ax2.semilogy([ks], [err[ks]], marker="*", color=col, ms=9, mec="k", mew=0.5, ls="none")
-    ax2.semilogy(np.arange(1, Nmax+1), rec["differences"], ls=(0, (1, 1.5)), color=col, lw=0.7)
-ax2.plot([], [], marker="*", color="0.5", mec="k", mew=0.5, ms=8, ls="none", label="$N^*$ (rule)")
-ax2.plot([], [], ls=(0, (1, 1.5)), color="0.5", lw=0.7, label=r"$|S_N-S_{N-1}|$")
-ax2.set_xlabel(r"truncation order $N$"); ax2.set_ylabel(r"$|\langle a^\dagger a\rangle_N-\langle a^\dagger a\rangle|$")
+ax2.set_xlabel(r"order $N$"); ax2.set_ylabel(r"$|\langle a^\dagger a\rangle_N-\langle a^\dagger a\rangle|$")
 ax2.set_xlim(-0.3, Nmax+0.3); ax2.set_ylim(1e-12, 1e3); ax2.set_xticks(range(0, Nmax+1, 2)); ax2.legend(loc="lower left", ncol=2)
 ax2.text(0.45, 0.95, "(b)", transform=ax2.transAxes, ha="left", va="top")
 fig.tight_layout(pad=0.3, h_pad=0.6); fig.savefig("fig_kerr_convergence.pdf")
@@ -326,12 +297,8 @@ fa = [ring["results"][f"{U:.3f}"]["g2"] for U in Us13]
 PS = np.array([r["partial_sums"] for r in fa]); exG = np.array([r["exact"] for r in fa])
 fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(COLW, 4.5))
 ax1.plot(Us13, exG, "k-", lw=1.6, label="exact")
-for col, N, ls in zip(ORDER_COLORS, [1, 2, 4, 6], [(0, (4, 2)), ":", "-.", "-"]):
+for col, N, ls in zip(ORDER_COLORS, [1, 2, 4, 6, 10], [(0, (4, 2)), ":", "-.", (0, (6, 1.5, 1, 1.5)), "-"]):
     ax1.plot(Us13, PS[:, N], color=col, lw=1.0, ls=ls, label=f"$N\\leq{N}$")
-ax1.errorbar(Us13[1:], [r["value"] for r in fa[1:]], yerr=[r["delta"] for r in fa[1:]], fmt="o", color="k", mfc="white", ms=2.8, capsize=1.5, lw=0.7,
-             label="optimal truncation $\\pm\\delta$")
-for U, r in zip(Us13, fa):
-    if U > 0: ax1.annotate(str(r["N_star"]), (U, r["value"]), textcoords="offset points", xytext=(4, -10), ha="left", fontsize=5.2, color="0.25")
 ax1.set_xlabel(r"$U/\kappa$"); ax1.set_ylabel(r"on-site $g^{(2)}(0)$"); ax1.set_xlim(0, Us13[-1])
 lg = ax1.legend(loc="upper left", fontsize=6.2); [l.set_linewidth(1.4) for l in lg.get_lines()]
 ax1.text(0.97, 0.06, "(a) $K=3$", transform=ax1.transAxes, ha="right", va="bottom")

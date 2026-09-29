@@ -1,5 +1,5 @@
 """K=3 Kerr ring: g2 and g3 partial sums to order NMAX (momentum engine, degree pruning), exact steady
-states (sparse time evolution, cutoffs 7/8/9 levels per site), optimal truncation.  Parallel over U.
+states (sparse time evolution, cutoffs 7/8/9 levels per site), error of every partial sum.  Parallel over U.
 usage: ring_pool.py NMAX NPROC"""
 import sys, json, os, time, numpy as np
 _ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))  # the code/ directory
@@ -7,7 +7,7 @@ from multiprocessing import Pool
 sys.path.insert(0, os.path.join(_ROOT, 'engines'))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import multimode as MM, tensor_engine as TE
-from truncation import truncation_record
+from series import series_record
 from ring_trunc import series_pruned, series_unpruned
 from ring_ss_evolve import ring_steady_evolve
 
@@ -114,12 +114,12 @@ if __name__ == '__main__':
         S = {k: np.cumsum(np.array(s[k]["terms_re"]) + 1j*np.array(s[k]["terms_im"])).real for k in ("n", "n2", "n3")}
         g2 = S["n2"]/S["n"]**2; g3 = S["n3"]/S["n"]**3; ex = out["exact"][key]
         for tag, M in (("results", NMAX), ("results_Nmax6", 6)):
-            out[tag][key] = dict(U=U, n=truncation_record(S["n"][:M+1], exact=ex["nmax8"]["n0"]),
-                                 g2=truncation_record(g2[:M+1], exact=ex["g2"]), g3=truncation_record(g3[:M+1], exact=ex["g3"]))
+            out[tag][key] = dict(U=U, n=series_record(S["n"][:M+1], exact=ex["nmax8"]["n0"]),
+                                 g2=series_record(g2[:M+1], exact=ex["g2"]), g3=series_record(g3[:M+1], exact=ex["g3"]))
         a = out["results"][key]; b = out["results_Nmax6"][key]
-        print(f"U={U}: g2 N*={a['g2']['N_star']} {a['g2']['value']:.6f}+-{a['g2']['delta']:.1e} true {a['g2']['true_error']:.1e} | "
-              f"g3 N*={a['g3']['N_star']} {a['g3']['value']:.6f}+-{a['g3']['delta']:.1e} true {a['g3']['true_error']:.1e} | "
-              f"(Nmax6: g2 N*={b['g2']['N_star']} true {b['g2']['true_error']:.1e}, g3 N*={b['g3']['N_star']} true {b['g3']['true_error']:.1e}) [{s['time']:.0f}s]", flush=True)
+        print(f"U={U}: g2 N={a['g2']['N']} {a['g2']['value']:.6f} err {a['g2']['error']:.1e} | "
+              f"g3 N={a['g3']['N']} {a['g3']['value']:.6f} err {a['g3']['error']:.1e} | "
+              f"(Nmax6: g2 N={b['g2']['N']} err {b['g2']['error']:.1e}, g3 N={b['g3']['N']} err {b['g3']['error']:.1e}) [{s['time']:.0f}s]", flush=True)
     print("crosscheck", cross, flush=True)
     json.dump(out, open('ring_truncation.json', 'w'), indent=1)
     print(f"done [{time.time()-t0:.0f}s]")

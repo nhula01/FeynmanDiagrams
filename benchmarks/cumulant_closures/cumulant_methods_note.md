@@ -43,8 +43,8 @@ previous cutoff, until successive g3 values agree to 1e-8 (1e-10 for U <= 0.125)
 Nt = 11 (U = 0.1), 13 (0.15), 16 (0.2), 19 (0.25) and 21 (0.3). The larger of the last two changes in g3 is at most 1e-8 up to U = 0.25
 and 8.5e-7 at U = 0.3. That is at least three orders of magnitude below any method error discussed here. At U = 0.02 and 0.025 the
 result agrees with an independent calculation in the undisplaced per-site cube n_j < 10 to 2.4e-7 in g3, which is within that
-calculation's own cutoff error (4e-6). The earlier reference used for Fig. 11 had a lower cutoff; its g3 at U = 0.3 was about 2.52,
-against the converged 2.52728.
+calculation's own cutoff error (4e-6). A reference with a lower cutoff gives g3 of about 2.52 at U = 0.3, against the converged
+2.52728.
 
 ## Validation of the closure code
 
@@ -53,7 +53,7 @@ It also reproduces hfb_chain.py in n and g2. It does not reproduce the g3 printe
 combinatorial error in the Gaussian three-photon moment: it uses 18 n|m|^2 in <b^dag^3 b^3>, where Wick's theorem gives
 <b^dag^3 b^3> = 6 n^3 + 9 n |m|^2 (n = <b^dag b>, m = <b b>). We checked the coefficient against a displaced squeezed thermal state
 in QuTiP. The error makes the Gaussian g3 too large by 6e-5 at U = 0.1, 1.5e-3 at U = 0.2 and 1.2e-2 at U = 0.3. The second-order
-closure curve in the revised figure uses the corrected value. At U = 0 all three orders reproduce the coherent state
+closure curve in Fig. 9 uses the corrected value. At U = 0 all three orders reproduce the coherent state
 (|g2 - 1|, |g3 - 1| < 2e-14, and n = |alpha|^2 to 1e-16). At U = 0.02 the relative error in g3 is 3.3e-4, 1.1e-6 and 3.6e-8 at
 N = 2, 3, 4, so each order gains between one and three decades in the weakly nonlinear limit.
 
@@ -66,17 +66,17 @@ Re lambda = -0.50 to -0.53 kappa. The breakdown that does appear is a loss of co
 the fourth-order g3 is worse than the third-order one. The g3 errors at U = 0.25 are 2.0e-2 at N = 3 and 2.7e-2 at N = 4; at U = 0.3 they
 are 1.8e-2 and 6.8e-2. The g2 of the fourth-order closure remains the most accurate of all methods up to U = 0.25.
 
-## Accuracy and cost at the couplings of Fig. 11
+## Accuracy and cost at the couplings of Fig. 9
 
 Relative errors against the exact steady state:
 
-| U/kappa | exact g3 | closure N=2 | closure N=3 | closure N=4 | diagrams N<=2 | diagrams N<=4 |
-|---|---|---|---|---|---|---|
-| 0.10 | 1.312582 | 1.2e-2 / 1.0e-3 | 8.5e-4 / 9.6e-5 | 1.8e-4 / 1.4e-6 | 1.7e-2 / 2.9e-3 | 1.0e-3 / 1.1e-4 |
-| 0.15 | 1.538157 | 3.1e-2 / 3.9e-3 | 4.7e-3 / 6.2e-4 | 1.8e-3 / 1.4e-5 | 5.3e-2 / 9.8e-3 | 6.5e-3 / 7.5e-4 |
-| 0.20 | 1.831380 | 6.1e-2 / 9.6e-3 | 1.3e-2 / 2.2e-3 | 8.3e-3 / 1.3e-5 | 1.1e-1 / 2.2e-2 | 2.0e-2 / 2.4e-3 |
-| 0.25 | 2.181138 | 8.8e-2 / 1.7e-2 | 2.0e-2 / 5.3e-3 | 2.7e-2 / 1.7e-4 | 1.8e-1 / 3.9e-2 | 3.2e-2 / 3.7e-3 |
-| 0.30 | 2.527280 | 9.0e-2 / 2.3e-2 | 1.8e-2 / 1.2e-2 | 6.8e-2 / 2.4e-3 | 2.2e-1 / 5.4e-2 | 2.3e-2 / 9.1e-4 |
+| U/kappa | exact g3 | closure N=2 | closure N=3 | closure N=4 | diagrams N<=2 | diagrams N<=4 | diagrams N<=10 |
+|---|---|---|---|---|---|---|---|
+| 0.10 | 1.312582 | 1.2e-2 / 1.0e-3 | 8.5e-4 / 9.6e-5 | 1.8e-4 / 1.4e-6 | 1.7e-2 / 2.9e-3 | 1.0e-3 / 1.1e-4 | 1.8e-6 / 1.5e-7 |
+| 0.15 | 1.538157 | 3.1e-2 / 3.9e-3 | 4.7e-3 / 6.2e-4 | 1.8e-3 / 1.4e-5 | 5.3e-2 / 9.8e-3 | 6.5e-3 / 7.5e-4 | 1.6e-4 / 1.4e-5 |
+| 0.20 | 1.831380 | 6.1e-2 / 9.6e-3 | 1.3e-2 / 2.2e-3 | 8.3e-3 / 1.3e-5 | 1.1e-1 / 2.2e-2 | 2.0e-2 / 2.4e-3 | 3.0e-3 / 2.8e-4 |
+| 0.25 | 2.181138 | 8.8e-2 / 1.7e-2 | 2.0e-2 / 5.3e-3 | 2.7e-2 / 1.7e-4 | 1.8e-1 / 3.9e-2 | 3.2e-2 / 3.7e-3 | 1.9e-2 / 1.7e-3 |
+| 0.30 | 2.527280 | 8.9e-2 / 2.3e-2 | 1.8e-2 / 1.2e-2 | 6.8e-2 / 2.4e-3 | 2.2e-1 / 5.4e-2 | 2.3e-2 / 9.1e-4 | 5.1e-2 / 2.6e-3 |
 
 Each entry gives the error on g3, then the error on g2. The wall-clock time per evaluation on one core is 0.13 s (N = 2),
 0.6 s (N = 3) and 5 s (N = 4) for the closures, counting generation of the equations and the steady-state solve. It is 1.7 s
@@ -87,26 +87,25 @@ node, scattered by up to a factor of ten between identical calls but did not cha
 
 Against the second-order closure, the fourth-order diagrams reduce the g3 error by a factor of 12 at U = 0.1 and by factors of
 2.8 to 4.8 for U = 0.15 to 0.3, as stated in the main text. Against the higher-order closures the comparison reverses. On g3 the
-better of the third- and fourth-order closures is more accurate than the fourth-order diagrams at every coupling of Fig. 11. The
+better of the third- and fourth-order closures is more accurate than the fourth-order diagrams at every coupling of Fig. 9. The
 diagram error is larger by a factor of 5.5 at U = 0.1, 3.7 at U = 0.15, 2.4 at U = 0.2, 1.6 at U = 0.25 and 1.25 at U = 0.3. On g2 the
 fourth-order closure is better by factors of 20 to 190 up to U = 0.25. Only at U = 0.3 do the diagrams win on g2, by a factor of 2.6.
 The third-order closure costs about 60 times less than the fourth-order diagrams and the fourth-order closure about 7 times less.
 
-The revised figure also shows the optimally truncated diagrams of the truncation analysis, which use the order N* (8 to 10)
-that minimizes successive differences, with delta = |S_N* - S_N*-1| as the error bar. Scored against the converged reference,
-their g3 error is 1.8e-6 at U = 0.1, 3.2e-4 at U = 0.15, 4.9e-3 at U = 0.2, 3.1e-2 at U = 0.25 and 1.05e-1 at U = 0.3. This beats the
-best closure on g3 by factors of 100, 5.5 and 1.7 at U = 0.1, 0.15 and 0.2, breaks even near U = 0.225, and is worse by factors of
-1.6 at U = 0.25 and 5.5 at U = 0.3. On g2 the optimally truncated diagrams are better than the fourth-order closure only up to
-U = 0.125. The error bar delta bounds the true error up to U = 0.1. Above that it underestimates the true
-error by a factor of 5 at U = 0.125, rising to 27 at U = 0.3. The exact values carried in that analysis (per-site cutoff 8) differ from the
-converged reference by 2e-3 in g3 at U = 0.3.
+Carried to tenth order (the partial sums through N = 10 of n, n2 and n3 from ../truncation/, scored against the converged
+reference above), the diagrams have a relative g3 error of 1.8e-6 at U = 0.1, 1.6e-4 at U = 0.15, 3.0e-3 at U = 0.2, 1.9e-2 at
+U = 0.25 and 5.1e-2 at U = 0.3. This beats the best closure on g3 by factors of 103, 11, 2.8, 1.8 and 1.05 at U = 0.1, 0.15, 0.2,
+0.225 and 0.25, and is worse by factors of 1.75 at U = 0.275 and 2.8 at U = 0.3. On g2 the tenth-order diagrams are better than the
+fourth-order closure only up to U = 0.125, and on the photon number only up to U = 0.1. The tenth-order values and errors are stored
+under diagrams_order10 in cumulant_closure_results.json.
 
 Verdict: for the K = 3 ring the fourth-order diagrams do not beat the best cumulant closure. The best closure has a smaller g3 error
 by a factor of 1.25 (U = 0.3) to 5.5 (U = 0.1) at 7 to 60 times lower cost, and the diagrams are ahead only on g2 at U = 0.3,
-by a factor of 2.6. Only the optimally truncated high-order diagrams beat the closures on g3, and only for U <= 0.2.
+by a factor of 2.6. The tenth-order diagrams beat the closures on g3 for U <= 0.25, at a cost (4.2 s for all couplings in the
+sparse-matrix form) below one fourth-order closure evaluation.
 
 ## Files
 
 cumulant_closure.py (moment-hierarchy generator and closure), run_cumulants.py (closure and diagram driver),
 exact_disp.py (displaced-basis exact reference), diag_run.py and closure_timing.py (diagram values and timing repeats),
-assemble.py (writes cumulant_closure_results.json), make_fig_g3.py (fig_g3.pdf). All are in revision/cumulants/.
+assemble.py (writes cumulant_closure_results.json), make_fig_g3.py (fig_g3.pdf). All are in this directory.

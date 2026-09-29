@@ -27,16 +27,12 @@ def mean_field(U):
     a0 = np.linalg.solve(G, eta); s = solve_ivp(f, (0, 400), np.concatenate([a0.real, a0.imag]), rtol=1e-12, atol=1e-14)
     a = s.y[:K, -1] + 1j*s.y[K:, -1]; return float(abs(a[0])**2)
 
-def trunc(S):
-    S = np.asarray(S); d = np.abs(np.diff(S)); k = int(np.argmin(d)) + 1
-    return dict(N_star=k, value=float(S[k]), delta=float(d[k-1]), differences=d.tolist())
-
 chain = dict(description="Eight-site chain (revision_params.json chain8_fcs), counting on site 0. Diagrams: partial sums of "
              "theta_N(chi) through order N with the full Rayleigh-Schroedinger recursion (TiltedNZ, revision/truncation/fcs_nz.py; "
              "'diagrams_maxdeg5_notebook_recursion' = fcs_multi.TiltedChain, which omits -sum_k theta_k psi_(N-k)), chi-derivatives from a Cauchy contour |chi|=0.1 (16 points; "
              "|chi|=0.05 check). Gaussian: stationary point of the tilted Riccati system (root finder), five-point differences at h=0.05,0.025,0.0125 Richardson-"
              "extrapolated. Mean field: c1=kappa|alpha_0|^2, Fano=c3/c1=1. 'fd_h0.05' = the paper's finite-difference convention. "
-             "Entries are [c1/kappa, c2/c1, c3/c1]. Optimal truncation: order N>=1 minimizing |S_N - S_{N-1}|, error = that difference.",
+             "Entries are [c1/kappa, c2/c1, c3/c1]; the diagrams are reported at sixth order, the highest computed.",
              results={})
 for key in (d5 or {}).get('results', {}):
     U = float(key); r5 = d5['results'][key]; rec = dict(U=U)
@@ -48,9 +44,6 @@ for key in (d5 or {}).get('results', {}):
     if gs and key in gs['results']:
         g = gs['results'][key]; rec['gaussian'] = {'value': g['richardson'], 'fd_h0.05': g['fd_h0.05'], 'richardson_change_last': g['richardson_change_last']}
     mf = mean_field(U); rec['mean_field'] = [mf, 1.0, 1.0]
-    if U > 0:
-        S = np.array(r5['contour_r0.1'])
-        rec['optimal_truncation_maxdeg5'] = {q: trunc(S[:, i]) for i, q in enumerate(['c1', 'fano', 'c3c1'])}
     chain['results'][key] = rec
 json.dump(chain, open('chain8_contour.json', 'w'), indent=1)
 
@@ -81,12 +74,8 @@ for tag, v in traj['results'].items():
     if 'diagrams_maxdeg6' in ch:
         refs.update({f'diagrams_maxdeg6_N{N}': ch['diagrams_maxdeg6']['orders'][N] for N in range(3, len(ch['diagrams_maxdeg6']['orders']))})
     refs['gaussian'] = ch['gaussian']['value']; refs['mean_field'] = ch['mean_field']
-    ot = ch['optimal_truncation_maxdeg5']
     v['comparison'] = dict(note="z = (trajectory - reference)/SE_trajectory for [c1, c2/c1, c3/c1]",
-        references={k: dict(value=r, z=((est - np.array(r))/se).round(2).tolist()) for k, r in refs.items()},
-        optimal_truncation={q: dict(N_star=t['N_star'], value=t['value'], delta=t['delta'],
-                                    z_traj=float(round((est[i] - t['value'])/np.hypot(se[i], t['delta']), 2)))
-                            for i, q in enumerate(['c1', 'fano', 'c3c1']) for t in [ot[q]]})
+        references={k: dict(value=r, z=((est - np.array(r))/se).round(2).tolist()) for k, r in refs.items()})
 json.dump(traj, open('traj_fcs_results.json', 'w'), indent=1)
 
 # ---- figure
@@ -94,19 +83,13 @@ plt.rcParams.update({"font.family": "serif", "mathtext.fontset": "cm", "font.siz
                      "xtick.direction": "in", "ytick.direction": "in"})
 COL = ["#d95f02", "#1b9e77", "#7570b3", "#e7298a", "#66a61e", "#a6761d"]
 keys = sorted(chain['results'], key=float); Us = np.array([float(k) for k in keys])
-def opt(k, q, field):
-    r = chain['results'][k]
-    if 'optimal_truncation_maxdeg5' not in r: return r['diagrams_maxdeg5']['orders'][0][{'c1': 0, 'fano': 1, 'c3c1': 2}[q]] if field == 'value' else 0.0
-    return r['optimal_truncation_maxdeg5'][q][field]
-N3 = np.array([[opt(k, q, 'value') for q in ('c1', 'fano', 'c3c1')] for k in keys])      # optimal truncation N*
-dN = np.array([[opt(k, q, 'delta') for q in ('c1', 'fano', 'c3c1')] for k in keys])
+N6 = np.array([chain['results'][k]['diagrams_maxdeg5']['orders'][-1] for k in keys])      # diagrams through sixth order
 Gs = np.array([chain['results'][k]['gaussian']['value'] for k in keys])
 fig, ax = plt.subplots(figsize=(3.375, 2.95))
 ax.axhline(1.0, color='0.5', ls=(0, (4, 2)), lw=1.0, label='mean field')
 for i, (q, lab) in enumerate([(1, r'$c_2/c_1$'), (2, r'$c_3/c_1$')]):
     ax.plot(Us, Gs[:, q], color=COL[i], lw=0.9, ls=(0, (1, 1.2)))
-    ax.fill_between(Us, N3[:, q] - dN[:, q], N3[:, q] + dN[:, q], color=COL[i], alpha=0.25, lw=0)
-    ax.plot(Us, N3[:, q], 'o-', color=COL[i], ms=3, lw=1.1, label=lab + ' diagrams')
+    ax.plot(Us, N6[:, q], 'o-', color=COL[i], ms=3, lw=1.1, label=lab + ' diagrams')
 first = True
 for k, v in sorted(traj['results'].items()):
     if k.endswith('cut8') or v['status'] != 'final': continue
@@ -116,13 +99,12 @@ for k, v in sorted(traj['results'].items()):
 ax.plot([], [], color='0.3', lw=0.9, ls=(0, (1, 1.2)), label='Gaussian')
 ax.set_xlabel(r'$U/\kappa$'); ax.set_ylabel('counting cumulant ratio'); ax.set_xlim(-0.004, 0.104)
 ymax = max(2.0, max([v['estimate'][2] + v['se'][2] for k, v in traj['results'].items() if not k.endswith('cut8') and v['status'] == 'final'] + [0]) + 0.08)
-ymax = max(ymax, float(np.max(N3[:, 2] + dN[:, 2])) + 0.05)
+ymax = max(ymax, float(np.max(N6[:, 2])) + 0.05)
 ax.set_ylim(0.95, ymax)
 ax.legend(fontsize=6.5, loc='lower left', bbox_to_anchor=(0.0, 1.01), ncol=3, handlelength=1.6, columnspacing=0.9, borderaxespad=0.0)
 ins = ax.inset_axes([0.17, 0.52, 0.38, 0.32])
 for i, q in enumerate([1, 2]):
-    ins.fill_between(Us, N3[:, q] - Gs[:, q] - dN[:, q], N3[:, q] - Gs[:, q] + dN[:, q], color=COL[i], alpha=0.25, lw=0)
-    ins.plot(Us, N3[:, q] - Gs[:, q], 'o-', color=COL[i], ms=2, lw=0.9)
+    ins.plot(Us, N6[:, q] - Gs[:, q], 'o-', color=COL[i], ms=2, lw=0.9)
     for k, v in traj['results'].items():
         if k.endswith('cut8') or v['status'] != 'final': continue
         g = Gs[list(Us).index(v['U'])] if v['U'] in list(Us) else None

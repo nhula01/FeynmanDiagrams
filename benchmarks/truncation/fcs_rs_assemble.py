@@ -1,9 +1,9 @@
-"""assemble fcs_rs_raw.json into cumulant partial sums + optimal truncation"""
+"""assemble fcs_rs_raw.json into cumulant partial sums"""
 import sys, json, os, numpy as np
 _ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))  # the code/ directory
 sys.path.insert(0, os.path.join(_ROOT, 'engines'))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from truncation import truncation_record
+from series import series_record
 RP = json.load(open(os.path.join(_ROOT, 'notebook', 'data', 'revision_params.json')))
 H = 0.05; CHIS = [-2*H, -H, 0.0, H, 2*H]
 raw = json.load(open('fcs_rs_raw.json'))
@@ -18,7 +18,7 @@ def cps(kind, U, Nmax, md, rs=True):
     return c1, c2/c1, c3/c1
 def recs(t, exact=None, **extra):
     ex = exact or {}
-    return dict(c1=truncation_record(t[0], exact=ex.get("c1")), fano=truncation_record(t[1], exact=ex.get("fano")), c3c1=truncation_record(t[2], exact=ex.get("c3c1")), **extra)
+    return dict(c1=series_record(t[0], exact=ex.get("c1")), fano=series_record(t[1], exact=ex.get("fano")), c3c1=series_record(t[2], exact=ex.get("c3c1")), **extra)
 out = dict(note="full Rayleigh-Schroedinger recursion (TiltedChainRS in fcs_rs.py); fd step h=0.05 in chi as in the paper; rs=False reproduces the notebook code")
 # K=1
 old = json.load(open('fcs_k1_truncation.json'))
@@ -55,7 +55,7 @@ for md, Nm in ((5, 6), (6, 6), (7, 4)):
     if d: out["chain8"][f"maxdeg{md}_N{Nm}"] = d
 json.dump(out, open('fcs_rs_truncation.json', 'w'), indent=1)
 def show(tag, r):
-    print(tag, "  ".join(f"{q}: N*={r[q]['N_star']} {r[q]['value']:.5f}+-{r[q]['delta']:.1e}" + (f" true {r[q]['true_error']:.1e}" if 'true_error' in r[q] else "") for q in ("c1", "fano", "c3c1")))
+    print(tag, "  ".join(f"{q}: N={r[q]['N']} {r[q]['value']:.5f}" + (f" err {r[q]['error']:.1e}" if 'error' in r[q] else "") for q in ("c1", "fano", "c3c1")))
 for U, d in out["K1"].items():
     for k, r in d.items(): show(f"K1 U={U} {k}", r)
 for k in ("maxdeg8_N6", "maxdeg9_N6"):

@@ -1,12 +1,12 @@
 """K=3 Kerr ring: g2 and g3 partial sums to order 6 (momentum engine with degree pruning),
-tensor-engine cross-check, exact reference (time evolution, cutoff 8), optimal truncation,
+tensor-engine cross-check, exact reference (time evolution, cutoff 8), error of every partial sum,
 and label-count instrumentation versus K for part (C)."""
 import sys, json, os, time, numpy as np
 _ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))  # the code/ directory
 sys.path.insert(0, os.path.join(_ROOT, 'engines'))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import multimode as MM, tensor_engine as TE
-from truncation import truncation_record, optimal_truncation
+from series import series_record
 from ring_ss_evolve import ring_steady_evolve
 PR = json.load(open(os.path.join(_ROOT, 'notebook', 'data', 'revision_params.json')))["ring3"]
 P = dict(kappa=PR["kappa"], Delta=PR["Delta"], J=PR["J"], eta=PR["eta"])
@@ -83,21 +83,21 @@ if __name__ == '__main__':
         n, n2, n3 = ring_series(U, NMAX)
         g2 = n2/n**2; g3 = n3/n**3
         ex = out["exact"][f"{U:.3f}"]
-        out["results"][f"{U:.3f}"] = dict(U=U, n=truncation_record(n, exact=ex["n0"]),
-                                          g2=truncation_record(g2, exact=ex["g2"]),
-                                          g3=truncation_record(g3, exact=ex["g3"]))
+        out["results"][f"{U:.3f}"] = dict(U=U, n=series_record(n, exact=ex["n0"]),
+                                          g2=series_record(g2, exact=ex["g2"]),
+                                          g3=series_record(g3, exact=ex["g3"]))
         rg2 = out["results"][f"{U:.3f}"]["g2"]; rg3 = out["results"][f"{U:.3f}"]["g3"]
-        print(f"U={U}: g2 N*={rg2['N_star']} {rg2['value']:.5f}+-{rg2['delta']:.1e} (true {rg2['true_error']:.1e}, exact {ex['g2']:.5f}) | "
-              f"g3 N*={rg3['N_star']} {rg3['value']:.5f}+-{rg3['delta']:.1e} (true {rg3['true_error']:.1e}, exact {ex['g3']:.5f}) [{time.time()-t:.0f}s]", flush=True)
+        print(f"U={U}: g2 N={rg2['N']} {rg2['value']:.5f} (err {rg2['error']:.1e}, exact {ex['g2']:.5f}) | "
+              f"g3 N={rg3['N']} {rg3['value']:.5f} (err {rg3['error']:.1e}, exact {ex['g3']:.5f}) [{time.time()-t:.0f}s]", flush=True)
 
     # fig_ring panel (a): g2 on the 13-point U grid, orders to NMAX, exact from cache (n0, n0n0)
     for U in Us_fig10:
         n, n2, n3 = ring_series(U, NMAX)
         g2 = n2/n**2
         exg2 = cached[f"{U:.3f}"]["n0n0"]/cached[f"{U:.3f}"]["n0"]**2
-        out["fig_ring_a"][f"{U:.3f}"] = dict(U=U, g2=truncation_record(g2, exact=exg2), n=truncation_record(n, exact=cached[f"{U:.3f}"]["n0"]))
+        out["fig_ring_a"][f"{U:.3f}"] = dict(U=U, g2=series_record(g2, exact=exg2), n=series_record(n, exact=cached[f"{U:.3f}"]["n0"]))
         rg = out["fig_ring_a"][f"{U:.3f}"]["g2"]
-        print(f"fig10a U={U}: g2 N*={rg['N_star']} {rg['value']:.5f}+-{rg['delta']:.1e} true {rg['true_error']:.1e}", flush=True)
+        print(f"fig10a U={U}: g2 N={rg['N']} {rg['value']:.5f} err {rg['error']:.1e}", flush=True)
     json.dump(out, open('ring_truncation.json', 'w'), indent=1)
 
     # ---------------------------------------------------------------- label counts versus K (part C)
