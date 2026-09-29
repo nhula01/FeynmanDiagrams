@@ -19,7 +19,7 @@ def cps(kind, U, Nmax, md, rs=True):
 def recs(t, exact=None, **extra):
     ex = exact or {}
     return dict(c1=series_record(t[0], exact=ex.get("c1")), fano=series_record(t[1], exact=ex.get("fano")), c3c1=series_record(t[2], exact=ex.get("c3c1")), **extra)
-out = dict(note="full Rayleigh-Schroedinger recursion (TiltedChainRS in fcs_rs.py); fd step h=0.05 in chi as in the paper; rs=False reproduces the notebook code")
+out = dict(note="full Rayleigh-Schroedinger recursion (TiltedChainRS in fcs_rs.py); fd step h=0.05 in chi as in the paper; rs=False is the legacy no-renormalization recursion retained for historical comparison, while current engines use the full recursion")
 # K=1
 old = json.load(open('fcs_k1_truncation.json'))
 out["K1"] = {}

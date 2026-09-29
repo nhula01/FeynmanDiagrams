@@ -1,6 +1,6 @@
-"""Counting cumulants with the full Rayleigh-Schroedinger recursion for the tilted eigenvalue.
-The notebook's fcs.theta_series / fcs_multi.TiltedChain.theta_series omit the terms -sum_{k=1}^{N-1} theta_k psi_{N-k};
-TiltedChainRS restores them.  usage: fcs_rs.py NPROC"""
+"""Counting cumulants with an explicit full/legacy Rayleigh-Schroedinger switch for the tilted eigenvalue.
+The current engines/fcs.py and engines/fcs_multi.py include the renormalization terms -sum_{k=1}^{N-1} theta_k psi_{N-k}.
+TiltedChainRS is retained to reproduce historical rs=False benchmark records; full_rs=True matches the current engine recursion. Usage: fcs_rs.py NPROC"""
 import sys, json, os, time, numpy as np
 _ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))  # the code/ directory
 from multiprocessing import Pool

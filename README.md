@@ -60,8 +60,8 @@ Checks
     05_driven_atom_fig7              Sec. V.B, Fig. 7
     06_kerr_ring_fig8                Sec. VI, Fig. 8 (engine cross-checks, K = 3 ring, disorder, timings)
     07_cumulant_closures_fig9        Sec. VI.B, Fig. 9, SM Table SI, and the sparse-matrix engine
-    08_counting_statistics_tableV    Sec. VII, Table V
-    09_eight_site_chain_fig10        Sec. VII, Fig. 10 and the quantum-jump benchmark
+    08_counting_statistics_tableV    Sec. VI.B, Table V
+    09_eight_site_chain_fig10        Sec. VI.B, Fig. 10 and the quantum-jump benchmark
     10_verification                  runs verify_numbers.py
 
 Each notebook has a Part A that runs the calculation of that section (FAST = True: reduced orders and cutoffs, seconds

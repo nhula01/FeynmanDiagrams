@@ -1,6 +1,6 @@
 """Assemble the eight-site counting benchmark: trajectory estimates, diagrams (contour derivatives),
 Gaussian FCS (Richardson differences), mean field; write chain8_contour.json, traj_fcs_results.json
-and fig_fcs.pdf.  usage: traj_fcs_final.py  (run in revision/trajectories)"""
+and fig_fcs.pdf.  usage: traj_fcs_final.py  (run in benchmarks/trajectories)"""
 import json, os, numpy as np
 _ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))  # the code/ directory
 from scipy.integrate import solve_ivp
@@ -16,7 +16,7 @@ def merge(pattern):
     for f in fs: out['results'].update(json.load(open(f))['results'])
     return out
 d5, d6 = merge('diag/diagRS_chain8_maxdeg5_U*.json'), merge('diag/diagRS_chain8_maxdeg6_U*.json')   # full RS recursion
-d5nb = J('diag/diag_chain8_maxdeg5.json')          # notebook recursion (omits -sum theta_k psi_{N-k}); kept for reference
+d5nb = J('diag/diag_chain8_maxdeg5.json')          # legacy no-renormalization notebook snapshot; kept for historical reference
 gs = J('diag/gauss_chain8_root.json')
 
 def mean_field(U):
@@ -28,8 +28,8 @@ def mean_field(U):
     a = s.y[:K, -1] + 1j*s.y[K:, -1]; return float(abs(a[0])**2)
 
 chain = dict(description="Eight-site chain (revision_params.json chain8_fcs), counting on site 0. Diagrams: partial sums of "
-             "theta_N(chi) through order N with the full Rayleigh-Schroedinger recursion (TiltedNZ, revision/truncation/fcs_nz.py; "
-             "'diagrams_maxdeg5_notebook_recursion' = fcs_multi.TiltedChain, which omits -sum_k theta_k psi_(N-k)), chi-derivatives from a Cauchy contour |chi|=0.1 (16 points; "
+             "theta_N(chi) through order N with the full Rayleigh-Schroedinger recursion (TiltedNZ, benchmarks/truncation/fcs_nz.py; "
+             "'diagrams_maxdeg5_notebook_recursion' = a legacy checked-in no-renormalization snapshot; current fcs_multi.TiltedChain includes -sum_k theta_k psi_(N-k)), chi-derivatives from a Cauchy contour |chi|=0.1 (16 points; "
              "|chi|=0.05 check). Gaussian: stationary point of the tilted Riccati system (root finder), five-point differences at h=0.05,0.025,0.0125 Richardson-"
              "extrapolated. Mean field: c1=kappa|alpha_0|^2, Fano=c3/c1=1. 'fd_h0.05' = the paper's finite-difference convention. "
              "Entries are [c1/kappa, c2/c1, c3/c1]; the diagrams are reported at sixth order, the highest computed.",
